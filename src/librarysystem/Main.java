@@ -5,14 +5,9 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
-/**
- * 
- * @author teddy
- * just to check the commit
- *
- */
-public class Main {
 
+public class Main {
+	
 	public static void main(String[] args) {
 	      EventQueue.invokeLater(() -> 
 	         {
