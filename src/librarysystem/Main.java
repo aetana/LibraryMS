@@ -6,7 +6,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
-// This is Teddy
+// This is Teddyyyyyyyyyy
 
 public class Main {
 
