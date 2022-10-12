@@ -5,9 +5,12 @@ import java.awt.EventQueue;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
-
-// This is Teddyyyyyyyyyy
-// Hello
+/**
+ * 
+ * @author teddy
+ * just to check the commit
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) {
