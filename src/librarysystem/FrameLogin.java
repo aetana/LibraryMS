@@ -6,12 +6,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
+import java.util.List;
+
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 
@@ -21,33 +26,41 @@ import javax.swing.JButton;
  *
  */
 
-public class FrameLogin extends JFrame {
+public class FrameLogin extends JFrame implements LibWindow{
 	private Image logo = new ImageIcon(FrameLogin.class.getResource("libraryLogo.png")).getImage().getScaledInstance(90, 99, Image.SCALE_SMOOTH);
 	private JPanel contentPane;
 	private JTextField txtUsername;
 	private JPasswordField pwdPassword;
 	private JLabel lblLogo;
+	
+	public static final FrameLogin INSTANCE = new FrameLogin();
+	
+	private boolean isInitialized = false;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					FrameLogin frame = new FrameLogin();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	private static LibWindow[] allWindows = { 
+	    	LibrarySystem.INSTANCE,
+			LoginWindow.INSTANCE,
+			AllMemberIdsWindow.INSTANCE,	
+			AllBookIdsWindow.INSTANCE,
+			FrameLogin.INSTANCE
+		};
+	    	
+	public static void hideAllWindows() {
+		
+		for(LibWindow frame: allWindows) {
+			frame.setVisible(false);
+			
+		}
 	}
-
 	/**
 	 * Create the frame.
 	 */
-	public FrameLogin() {
+	/* This class is a singleton */
+	private FrameLogin() { }
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		setTitle("MIU Library");
@@ -93,8 +106,33 @@ public class FrameLogin extends JFrame {
 		btnLogin.setFont(new Font("Arial", Font.BOLD, 25));
 		btnLogin.setBackground(new Color(0, 64, 64));
 		btnLogin.setBounds(166, 278, 250, 53);
+		addLoginButtonListener(btnLogin);
 		contentPane.add(btnLogin);
 		//setUndecorated(true);
 		setLocationRelativeTo(null);
+		
+	}
+
+	@Override
+	public boolean isInitialized() {
+		// TODO Auto-generated method stub
+		return isInitialized;
+	}
+
+	@Override
+	public void isInitialized(boolean val) {
+		// TODO Auto-generated method stub
+		isInitialized = val;
+	}
+	
+	private void addLoginButtonListener(JButton butn) {
+		butn.addActionListener(evt -> {
+			FrameLogin.hideAllWindows();
+			LibrarySystem.INSTANCE.init();
+			Util.centerFrameOnDesktop(LibrarySystem.INSTANCE);
+			LibrarySystem.INSTANCE.setVisible(true);
+			JOptionPane.showMessageDialog(this,"Successful Login");
+				
+		});
 	}
 }

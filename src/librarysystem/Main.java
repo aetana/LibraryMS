@@ -11,12 +11,20 @@ public class Main {
 	public static void main(String[] args) {
 	      EventQueue.invokeLater(() -> 
 	         {
+	        	FrameLogin.INSTANCE.setTitle("Sample Library Application");
+				FrameLogin.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+				FrameLogin.INSTANCE.init();
+				centerFrameOnDesktop(LibrarySystem.INSTANCE);
+				FrameLogin.INSTANCE.setVisible(true);
+	        	 /*
 	            LibrarySystem.INSTANCE.setTitle("Sample Library Application");
 	            LibrarySystem.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	            
 	            LibrarySystem.INSTANCE.init();
 	            centerFrameOnDesktop(LibrarySystem.INSTANCE);
 	            LibrarySystem.INSTANCE.setVisible(true);
+	            */
 	         });
 	   }
 	   
