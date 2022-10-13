@@ -414,7 +414,7 @@ public class MainWindow extends JFrame{
 		panelOverdue.add(btnOverdueCheck);
 		
 		tableOverdue = new JTable();
-		tableOverdue.setBounds(415, 155, 401, 269);
+		tableOverdue.setBounds(415, 119, 401, 305);
 		panelOverdue.add(tableOverdue);
 		
 		JPanel panelCheckoutRecord = new JPanel();
@@ -446,11 +446,11 @@ public class MainWindow extends JFrame{
 		btnShowRecord.setFont(new Font("Tahoma", Font.BOLD, 20));
 		btnShowRecord.setBorder(null);
 		btnShowRecord.setBackground(new Color(0, 64, 64));
-		btnShowRecord.setBounds(189, 210, 164, 53);
+		btnShowRecord.setBounds(191, 213, 164, 53);
 		panelCheckoutRecord.add(btnShowRecord);
 		
 		tableRecord = new JTable();
-		tableRecord.setBounds(409, 174, 401, 269);
+		tableRecord.setBounds(409, 138, 401, 305);
 		panelCheckoutRecord.add(tableRecord);
 		
 		JMenuBar menuBar = new JMenuBar();
