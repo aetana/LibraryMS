@@ -1,4 +1,5 @@
 package librarysystem;
+
 import java.awt.EventQueue;
 
 import javax.swing.ImageIcon;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import java.awt.Cursor;
 
 /**
  * 
@@ -28,6 +30,9 @@ import javax.swing.JButton;
 
 public class FrameLogin extends JFrame implements LibWindow{
 	private Image logo = new ImageIcon(FrameLogin.class.getResource("libraryLogo.png")).getImage().getScaledInstance(90, 99, Image.SCALE_SMOOTH);
+	private Image user = new ImageIcon(FrameLogin.class.getResource("user.png")).getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+	private Image pass = new ImageIcon(FrameLogin.class.getResource("pass.png")).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+	
 	private JPanel contentPane;
 	private JTextField txtUsername;
 	private JPasswordField pwdPassword;
@@ -77,12 +82,19 @@ public class FrameLogin extends JFrame implements LibWindow{
 		userNamePanel.setLayout(null);
 		
 		txtUsername = new JTextField();
+		txtUsername.setHorizontalAlignment(SwingConstants.CENTER);
 		txtUsername.setBorder(null);
-		txtUsername.setFont(new Font("Arial", Font.PLAIN, 11));
-		txtUsername.setText("Username");
-		txtUsername.setBounds(10, 11, 170, 20);
+		txtUsername.setFont(new Font("Arial", Font.PLAIN, 15));
+		txtUsername.setBounds(52, 0, 198, 40);
 		userNamePanel.add(txtUsername);
 		txtUsername.setColumns(10);
+		
+		JLabel lblUserLogo = new JLabel("");
+		lblUserLogo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblUserLogo.setBackground(new Color(255, 255, 255));
+		lblUserLogo.setBounds(0, 0, 54, 40);
+		lblUserLogo.setIcon(new ImageIcon(user));
+		userNamePanel.add(lblUserLogo);
 		
 		JPanel passwordPanel = new JPanel();
 		passwordPanel.setBounds(166, 216, 250, 40);
@@ -90,10 +102,17 @@ public class FrameLogin extends JFrame implements LibWindow{
 		passwordPanel.setLayout(null);
 		
 		pwdPassword = new JPasswordField();
+		pwdPassword.setHorizontalAlignment(SwingConstants.CENTER);
 		pwdPassword.setBorder(null);
-		pwdPassword.setText("Password");
-		pwdPassword.setBounds(10, 11, 170, 20);
+		pwdPassword.setBounds(54, 0, 196, 40);
 		passwordPanel.add(pwdPassword);
+		
+		JLabel lblPassLogo = new JLabel("");
+		lblPassLogo.setBackground(new Color(255, 255, 255));
+		lblPassLogo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPassLogo.setBounds(0, 0, 54, 40);
+		lblPassLogo.setIcon(new ImageIcon(pass));
+		passwordPanel.add(lblPassLogo);
 		
 		lblLogo = new JLabel("");
 		lblLogo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -102,9 +121,10 @@ public class FrameLogin extends JFrame implements LibWindow{
 		contentPane.add(lblLogo);
 		
 		JButton btnLogin = new JButton("LOG IN");
+		btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLogin.setForeground(new Color(255, 255, 255));
 		btnLogin.setFont(new Font("Arial", Font.BOLD, 25));
-		btnLogin.setBackground(new Color(0, 64, 64));
+		btnLogin.setBackground(new Color(64, 128, 128));
 		btnLogin.setBounds(166, 278, 250, 53);
 		addLoginButtonListener(btnLogin);
 		contentPane.add(btnLogin);
