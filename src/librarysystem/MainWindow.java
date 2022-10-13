@@ -5,6 +5,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.MenuEvent;
+
+import business.SystemController;
+
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
 import javax.swing.JButton;
@@ -24,7 +27,12 @@ import java.awt.Cursor;
  *
  */
 
-public class MainWindow extends JFrame{	
+public class MainWindow extends JFrame implements LibWindow{	
+	
+	public static final MainWindow INSTANCE = new MainWindow();
+		
+	private boolean isInitialized = false;
+		
 	private JPanel contentPane;
 	JLayeredPane layeredPane;
 
@@ -33,8 +41,8 @@ public class MainWindow extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow frame = new MainWindow();
-					frame.setVisible(true);
+					INSTANCE.init();
+					INSTANCE.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -42,8 +50,18 @@ public class MainWindow extends JFrame{
 		});
 	}
 	
-	public MainWindow() {
-		
+	private MainWindow() {}
+	
+	public void switchPanels(JPanel panel) {
+		layeredPane.removeAll();
+		layeredPane.add(panel);
+		layeredPane.repaint();
+		layeredPane.revalidate();
+	}
+
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(850, 550);
 		Util.centerFrameOnDesktop(this);
@@ -207,6 +225,8 @@ public class MainWindow extends JFrame{
 		
 		JMenuItem mnItemLogout = new JMenuItem("Logout");
 		mnItemLogout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		addLogoutListener(mnItemLogout);
+		mnItemLogout.addActionListener(null);
 		mnUser.add(mnItemLogout);
 		
 		JMenu mnAbout = new JMenu("About");
@@ -216,12 +236,26 @@ public class MainWindow extends JFrame{
 		mnItemAbout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnAbout.add(mnItemAbout);
 		
+		
+	}
+
+	@Override
+	public boolean isInitialized() {
+		// TODO Auto-generated method stub
+		return isInitialized ;
+	}
+
+	@Override
+	public void isInitialized(boolean val) {
+		// TODO Auto-generated method stub
+		isInitialized = val; 
 	}
 	
-	public void switchPanels(JPanel panel) {
-		layeredPane.removeAll();
-		layeredPane.add(panel);
-		layeredPane.repaint();
-		layeredPane.revalidate();
+	private void addLogoutListener(JMenuItem menuItem) {
+		menuItem.addActionListener(evt -> {
+			FrameLogin.hideAllWindows();
+			FrameLogin.INSTANCE.setVisible(true);
+			SystemController.currentAuth = null;
+		});
 	}
 }

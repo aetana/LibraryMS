@@ -55,7 +55,8 @@ public class FrameLogin extends JFrame implements LibWindow{
 			LoginWindow.INSTANCE,
 			AllMemberIdsWindow.INSTANCE,	
 			AllBookIdsWindow.INSTANCE,
-			FrameLogin.INSTANCE
+			FrameLogin.INSTANCE,
+			MainWindow.INSTANCE
 		};
 	    	
 	public static void hideAllWindows() {
@@ -167,12 +168,10 @@ public class FrameLogin extends JFrame implements LibWindow{
 				try {
 					ci.login(name, pwd);
 					FrameLogin.hideAllWindows();
-					LibrarySystem.INSTANCE.init();
-					Util.centerFrameOnDesktop(LibrarySystem.INSTANCE);
-					LibrarySystem.INSTANCE.setVisible(true);
+					MainWindow.INSTANCE.init();
+					Util.centerFrameOnDesktop(MainWindow.INSTANCE);
+					MainWindow.INSTANCE.setVisible(true);
 					JOptionPane.showMessageDialog(this,"Successful Login");
-				
-				
 				}
 				catch(LoginException e) {
 					showMessage(e.getMessage());
