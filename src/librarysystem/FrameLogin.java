@@ -8,6 +8,12 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import business.ControllerInterface;
+import business.SystemController;
+import dataaccess.Auth;
+import business.LoginException;
+
+
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -29,6 +35,9 @@ import java.awt.Cursor;
  */
 
 public class FrameLogin extends JFrame implements LibWindow{
+	ControllerInterface ci = new SystemController();
+	public final static FrameLogin INSTANCE =new FrameLogin();
+	
 	private Image logo = new ImageIcon(FrameLogin.class.getResource("libraryLogo.png")).getImage().getScaledInstance(90, 99, Image.SCALE_SMOOTH);
 	private Image user = new ImageIcon(FrameLogin.class.getResource("user.png")).getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 	private Image pass = new ImageIcon(FrameLogin.class.getResource("pass.png")).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
@@ -38,7 +47,6 @@ public class FrameLogin extends JFrame implements LibWindow{
 	private JPasswordField pwdPassword;
 	private JLabel lblLogo;
 	
-	public static final FrameLogin INSTANCE = new FrameLogin();
 	
 	private boolean isInitialized = false;
 
@@ -147,12 +155,35 @@ public class FrameLogin extends JFrame implements LibWindow{
 	
 	private void addLoginButtonListener(JButton butn) {
 		butn.addActionListener(evt -> {
-			FrameLogin.hideAllWindows();
-			LibrarySystem.INSTANCE.init();
-			Util.centerFrameOnDesktop(LibrarySystem.INSTANCE);
-			LibrarySystem.INSTANCE.setVisible(true);
-			JOptionPane.showMessageDialog(this,"Successful Login");
+			
+			String name = txtUsername.getText().trim();
+			String pwd = pwdPassword.getText().trim();
+			System.out.println(name.isEmpty());
+			System.out.println(pwd.isEmpty());
+			if(name.isEmpty() || pwd.isEmpty()) {
+				showMessage("Username and Password Cannot be Empty!");
+			}else {
+				System.out.println(name);
+				try {
+					ci.login(name, pwd);
+					FrameLogin.hideAllWindows();
+					LibrarySystem.INSTANCE.init();
+					Util.centerFrameOnDesktop(LibrarySystem.INSTANCE);
+					LibrarySystem.INSTANCE.setVisible(true);
+					JOptionPane.showMessageDialog(this,"Successful Login");
+				
+				
+				}
+				catch(LoginException e) {
+					showMessage(e.getMessage());
+				}
+				
+			}
 				
 		});
+	}
+	
+	private void showMessage(String msg) {
+		JOptionPane.showMessageDialog(this,msg);
 	}
 }
