@@ -17,6 +17,8 @@ public class Main {
 				FrameLogin.INSTANCE.init();
 				centerFrameOnDesktop(LibrarySystem.INSTANCE);
 				FrameLogin.INSTANCE.setVisible(true);
+				
+				
 	        	 /*
 	            LibrarySystem.INSTANCE.setTitle("Sample Library Application");
 	            LibrarySystem.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
