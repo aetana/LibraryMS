@@ -9,8 +9,13 @@ import javax.swing.event.MenuEvent;
 
 import business.AddMemberException;
 import business.BookException;
+import business.ControllerInterface;
+import business.LoginException;
 import business.SystemController;
 import dataaccess.DataAccess;
+import rulesets.RuleException;
+import rulesets.RuleSet;
+import rulesets.RuleSetFactory;
 
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
@@ -28,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import java.awt.Cursor;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -47,11 +53,24 @@ import javax.swing.JList;
 public class MainWindow extends JFrame implements LibWindow {
 
 	public static final MainWindow INSTANCE = new MainWindow();
+	//ControllerInterface ci = new SystemController();
 
 	private boolean isInitialized = false;
 
 	private JPanel contentPane;
 	JLayeredPane layeredPane;
+	private JPanel panelCheckoutBook;
+	private JPanel panelAddMember;
+	private JPanel panelAddBookCopy;
+	private JPanel panelAllBookIds;
+	private JPanel panelAllMemberIds;
+	private JPanel panelAddBook;
+	private JPanel panelOverdue;
+	
+	//why is this used outside the scope of panel?
+	private JScrollPane scrollPaneBookID;
+	private JScrollPane scrollPaneAllMemberID;
+	
 	private JTextField textMemberID;
 	private JTextField textISBN;
 	private JTextField textFirstName;
@@ -73,55 +92,17 @@ public class MainWindow extends JFrame implements LibWindow {
 	private JTable tableOverdue;
 	private SystemController controller = new SystemController();
 	
-	public void showMessage(String msg) {
-		JOptionPane.showMessageDialog(INSTANCE, msg);
-	}
-	public static void main(String[] args) {
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					INSTANCE.init();
-					INSTANCE.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public String getTextMemberID() {
+		return textMemberID.getText();
 	}
 
-	private MainWindow() {
+	public String getTextISBN() {
+		return textISBN.getText();
 	}
 
-	public void switchPanels(JPanel panel) {
-		layeredPane.removeAll();
-		layeredPane.add(panel);
-		layeredPane.repaint();
-		layeredPane.revalidate();
-	}
-
-	@Override
-	public void init() {
-		// TODO Auto-generated method stub
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(850, 550);
-		Util.centerFrameOnDesktop(this);
-		setResizable(false);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-
-		layeredPane = new JLayeredPane();
-		layeredPane.setAlignmentY(0.0f);
-		layeredPane.setAlignmentX(0.0f);
-		layeredPane.setBackground(new Color(0, 128, 128));
-		layeredPane.setBounds(0, 50, 850, 550);
-		contentPane.add(layeredPane);
-		layeredPane.setLayout(new CardLayout(0, 0));
-
-		JPanel panelCheckoutBook = new JPanel();
+	private void checkoutBookPanel() {
+		panelCheckoutBook = new JPanel();
+		panelCheckoutBook.setName("panelCheckoutBook");
 		panelCheckoutBook.setBackground(new Color(64, 128, 128));
 		layeredPane.add(panelCheckoutBook, "name_176444819990800");
 		panelCheckoutBook.setLayout(null);
@@ -165,8 +146,42 @@ public class MainWindow extends JFrame implements LibWindow {
 		btnCheckout.setBackground(new Color(0, 64, 64));
 		btnCheckout.setBounds(344, 313, 157, 53);
 		panelCheckoutBook.add(btnCheckout);
+	}
+	
 
-		JPanel panelAddMember = new JPanel();
+	public String getTextFirstNameValue() {
+		return textFirstName.getText();
+	}
+
+	public String getTextLastNameValue() {
+		return textLastName.getText();
+	}
+
+	public String getTextTelephoneValue() {
+		return textTelephone.getText();
+	}
+
+	public String getTextStreetValue() {
+		return textStreet.getText();
+	}
+	
+	public String getTextCityValue() {
+		return textCity.getText();
+	}
+
+	public String getTextStateValue() {
+		return textState.getText();
+	}
+
+	public String getTextZipValue() {
+		return textZip.getText();
+	}
+
+	
+
+	private void addMemberPanel() {
+		panelAddMember = new JPanel();
+		panelAddMember.setName("panelAddMember");
 		panelAddMember.setBackground(new Color(64, 128, 128));
 		layeredPane.add(panelAddMember, "name_176496424079300");
 		panelAddMember.setLayout(null);
@@ -214,6 +229,18 @@ public class MainWindow extends JFrame implements LibWindow {
 		textTelephone.setBounds(312, 201, 246, 33);
 		panelAddMember.add(textTelephone);
 
+		textStreet = new JTextField();
+		textStreet.setColumns(10);
+		textStreet.setBounds(312, 246, 246, 33);
+		panelAddMember.add(textStreet);
+
+		JLabel lblStreet = new JLabel("STREET");
+		lblStreet.setForeground(Color.WHITE);
+		lblStreet.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblStreet.setAutoscrolls(true);
+		lblStreet.setBounds(148, 246, 121, 33);
+		panelAddMember.add(lblStreet);
+		
 		JLabel lblCity = new JLabel("CITY");
 		lblCity.setForeground(Color.WHITE);
 		lblCity.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -252,7 +279,35 @@ public class MainWindow extends JFrame implements LibWindow {
 
 		JButton btnAdd = new JButton("ADD");
 		btnAdd.addActionListener(evt -> {
-
+			try {
+				RuleSet rules = RuleSetFactory.getRuleSet(getPanel());
+				rules.applyRules(this);
+				
+				String fname = textFirstName.getText().trim();
+				String lname = textLastName.getText().trim();
+				String telephone = textTelephone.getText().trim();
+				String street = textTelephone.getText().trim();
+				String city = textCity.getText().trim();
+				String state = textState.getText().trim();
+				String zip = textZip.getText().trim();
+				
+				controller.addMember(fname, lname, telephone, street, city, state, zip);					
+				showMessage("Library Member Added Successfully!");
+				
+				//JOptionPane.showMessageDialog(this,"Successful Login");
+				
+			} catch(RuleException e) {
+				//JOptionPane.showMessageDialog(contentPane, );
+				clearFields();
+				showMessage(e.getMessage());
+			}
+			catch(LoginException e) {
+				showMessage(e.getMessage());
+			}
+			catch(AddMemberException e) {
+				showMessage(e.getMessage());
+			}
+/*
 			String fname = textFirstName.getText().trim();
 			String lname = textLastName.getText().trim();
 			String telephone = textTelephone.getText().trim();
@@ -274,7 +329,7 @@ public class MainWindow extends JFrame implements LibWindow {
 				}
 
 			}
-
+*/
 		});
 
 		btnAdd.setForeground(Color.WHITE);
@@ -284,28 +339,29 @@ public class MainWindow extends JFrame implements LibWindow {
 		btnAdd.setBounds(357, 415, 140, 46);
 		panelAddMember.add(btnAdd);
 
-		textStreet = new JTextField();
-		textStreet.setColumns(10);
-		textStreet.setBounds(312, 246, 246, 33);
-		panelAddMember.add(textStreet);
+		
+	}
+	
+	
+	public String getTextAddCopyISBNValue() {
+		return textAddCopyISBN.getText();
+	}
 
-		JLabel lblStreet = new JLabel("STREET");
-		lblStreet.setForeground(Color.WHITE);
-		lblStreet.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblStreet.setAutoscrolls(true);
-		lblStreet.setBounds(148, 246, 121, 33);
-		panelAddMember.add(lblStreet);
-
-		JPanel panelAddBookCopy = new JPanel();
+	public String getTextbNumOfCopyValue() {
+		return textbNumOfCopy.getText();
+	}
+	private void addBookCopyPanel() {
+		panelAddBookCopy = new JPanel();
+		panelAddBookCopy.setName("panelAddBookCopy");
 		panelAddBookCopy.setBackground(new Color(64, 128, 128));
 		layeredPane.add(panelAddBookCopy, "name_176498428824900");
 		panelAddBookCopy.setLayout(null);
 
-		JLabel lblAddMember_1 = new JLabel("ADD NEW MEMBER");
+		JLabel lblAddMember_1 = new JLabel("ADD BOOK COPY");
 		lblAddMember_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAddMember_1.setForeground(Color.WHITE);
 		lblAddMember_1.setFont(new Font("Tahoma", Font.BOLD, 26));
-		lblAddMember_1.setBounds(292, 76, 259, 46);
+		lblAddMember_1.setBounds(292, 76, 300, 46);
 		panelAddBookCopy.add(lblAddMember_1);
 
 		JLabel lblIsbn = new JLabel("ISBN");
@@ -358,8 +414,11 @@ public class MainWindow extends JFrame implements LibWindow {
 		btnAddCopy.setBackground(new Color(0, 64, 64));
 		btnAddCopy.setBounds(408, 297, 157, 53);
 		panelAddBookCopy.add(btnAddCopy);
+	}
 
-		JPanel panelAllBookIds = new JPanel();
+	private void allBookIdsPanel() {
+		panelAllBookIds = new JPanel();
+		panelAllBookIds.setName("panelAllBookIds");
 		panelAllBookIds.setBackground(new Color(64, 128, 128));
 		layeredPane.add(panelAllBookIds, "name_176499964787600");
 		panelAllBookIds.setLayout(null);
@@ -371,11 +430,14 @@ public class MainWindow extends JFrame implements LibWindow {
 		lblAllBookIds.setBounds(272, 32, 227, 32);
 		panelAllBookIds.add(lblAllBookIds);
 
-		JScrollPane scrollPaneBookID = new JScrollPane();
+		scrollPaneBookID = new JScrollPane();
 		scrollPaneBookID.setBounds(59, 87, 718, 357);
 		panelAllBookIds.add(scrollPaneBookID);
-
-		JPanel panelAllMemberIds = new JPanel();
+	}
+	
+	private void allMemberIdsPanel() {
+		panelAllMemberIds = new JPanel();
+		panelAllMemberIds.setName("panelAllMemberIds");
 		panelAllMemberIds.setBackground(new Color(64, 128, 128));
 		layeredPane.add(panelAllMemberIds, "name_178507496023200");
 		panelAllMemberIds.setLayout(null);
@@ -387,11 +449,30 @@ public class MainWindow extends JFrame implements LibWindow {
 		lblAllMemberIds.setFont(new Font("Tahoma", Font.BOLD, 26));
 		panelAllMemberIds.add(lblAllMemberIds);
 
-		JScrollPane scrollPaneAllMemberID = new JScrollPane();
+		scrollPaneAllMemberID = new JScrollPane();
 		scrollPaneAllMemberID .setBounds(56, 82, 718, 357);
 		panelAllMemberIds.add(scrollPaneAllMemberID );
+	}
+	
+	public String getTextAddBookISBN() {
+		return textAddBookISBN.getText();
+	}
 
-		JPanel panelAddBook = new JPanel();
+	public String getTextTitleValue() {
+		return textTitle.getText();
+	}
+
+	public String getTextCheckoutPeriodValue() {
+		return textCheckoutPeriod.getText();
+	}
+
+	public String getTextFNumberOfCopiesValue() {
+		return textFNumberOfCopies.getText();
+	}
+	
+	public void addBookPanel() {
+		panelAddBook = new JPanel();
+		panelAddBook.setName("panelAddBook");
 		panelAddBook.setBackground(new Color(64, 128, 128));
 		layeredPane.add(panelAddBook, "name_178636081207100");
 		panelAddBook.setLayout(null);
@@ -469,8 +550,11 @@ public class MainWindow extends JFrame implements LibWindow {
 		JList listAuthor = new JList();
 		listAuthor.setBounds(362, 279, 246, 33);
 		panelAddBook.add(listAuthor);
-
-		JPanel panelOverdue = new JPanel();
+	}
+	
+	private void overduePanel() {
+		panelOverdue = new JPanel();
+		panelOverdue.setName("panelOverdue");
 		panelOverdue.setBackground(new Color(64, 128, 128));
 		layeredPane.add(panelOverdue, "name_178796255916100");
 		panelOverdue.setLayout(null);
@@ -505,8 +589,11 @@ public class MainWindow extends JFrame implements LibWindow {
 		tableOverdue = new JTable();
 		tableOverdue.setBounds(415, 119, 401, 305);
 		panelOverdue.add(tableOverdue);
-
+	}
+	
+	private void checkoutRecordPanel() {
 		JPanel panelCheckoutRecord = new JPanel();
+		panelCheckoutRecord.setName("panelCheckoutRecord");
 		panelCheckoutRecord.setBackground(new Color(64, 128, 128));
 		layeredPane.add(panelCheckoutRecord, "name_179092286329700");
 		panelCheckoutRecord.setLayout(null);
@@ -665,9 +752,86 @@ public class MainWindow extends JFrame implements LibWindow {
 		JMenuItem mnItemAbout = new JMenuItem("About");
 		mnItemAbout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnAbout.add(mnItemAbout);
+	}
+	
+	private void formatContentPane() {
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
+		layeredPane = new JLayeredPane();
+		layeredPane.setAlignmentY(0.0f);
+		layeredPane.setAlignmentX(0.0f);
+		layeredPane.setBackground(new Color(0, 128, 128));
+		layeredPane.setBounds(0, 50, 850, 550);
+		contentPane.add(layeredPane);
+		layeredPane.setLayout(new CardLayout(0, 0));
+	}
+	
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(850, 550);
+		Util.centerFrameOnDesktop(this);
+		setResizable(false);
+		
+		formatContentPane();
+		
+		checkoutBookPanel();
+		addMemberPanel();
+		addBookCopyPanel();
+		allBookIdsPanel();
+		allMemberIdsPanel();
+		addBookPanel();
+		overduePanel();
+		checkoutRecordPanel();
 
 	}
 
+	public void showMessage(String msg) {
+		JOptionPane.showMessageDialog(INSTANCE, msg);
+	}
+	public static void main(String[] args) {
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					INSTANCE.init();
+					INSTANCE.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private MainWindow() {
+	}
+
+	public void switchPanels(JPanel panel) {
+		layeredPane.removeAll();
+		layeredPane.add(panel);
+		layeredPane.repaint();
+		layeredPane.revalidate();
+		System.out.println(layeredPane.getComponent(0).getName());
+	}
+	
+	public Component getPanel() {
+		return layeredPane.getComponent(0);
+	}
+	
+	private void clearFields() {
+		textFirstName.setText("");
+		textLastName.setText("");
+		textTelephone.setText("");
+		textStreet.setText("");
+		textCity.setText("");
+		textState.setText("");
+		textZip.setText("");
+	}
 	@Override
 	public boolean isInitialized() {
 		// TODO Auto-generated method stub
