@@ -102,6 +102,7 @@ public class MainWindow extends JFrame implements LibWindow {
 	private JMenuItem mnItemOverdue;
 	private JMenuItem mnItemAllBookIds;
 	private JMenuItem mnItemAllMemberIds;
+	private JMenu mnAdd;
 	
 	private SystemController controller = new SystemController();
 	
@@ -109,11 +110,14 @@ public class MainWindow extends JFrame implements LibWindow {
 	public void switchMenu(Auth userType) {
 		if(userType == Auth.ADMIN) {
 			mnItemCheckoutBook.setEnabled(false);
-			
+			mnAdd.setVisible(true);
 		}else if(userType == Auth.LIBRARIAN) {
-			mnItemAddBook.setEnabled(false);
+			//mnAdd.setEnabled(false);
+			mnAdd.setVisible(false);
+			mnItemCheckoutBook.setEnabled(true);
 		}else if(userType == Auth.BOTH) {
-			
+			mnAdd.setVisible(true);
+			mnItemCheckoutBook.setEnabled(true);
 		}
 	}
 	
@@ -694,7 +698,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		menuBar.setBounds(0, 0, 850, 55);
 		contentPane.add(menuBar);
 
-		JMenu mnAdd = new JMenu(" Add");
+		mnAdd = new JMenu(" Add");
 		mnAdd.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnAdd.setHorizontalAlignment(SwingConstants.CENTER);
 		menuBar.add(mnAdd);
