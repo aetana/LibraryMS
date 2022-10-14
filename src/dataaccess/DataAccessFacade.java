@@ -32,6 +32,14 @@ public class DataAccessFacade implements DataAccess {
 		mems.put(memberId, member);
 		saveToStorage(StorageType.MEMBERS, mems);	
 	}
+	
+	public void saveMember(LibraryMember member) {
+		HashMap<String, LibraryMember> mems = readMemberMap();
+		String memberId = member.getMemberId();
+		mems.put(memberId, member);
+		saveToStorage(StorageType.MEMBERS, mems);	
+	}
+	
 	@Override
 	public Book searchBook(String ISBN) {
 		for(Book book: readBooksMap().values()) {
@@ -40,6 +48,16 @@ public class DataAccessFacade implements DataAccess {
 		}
 		return null;
 	}
+	
+	@Override
+	public LibraryMember searchMember(String memberId) {
+		for(LibraryMember member: readMemberMap().values()) {
+			if(member.getMemberId().equals(memberId))
+				return member;
+		}
+		return null;
+	}
+	
 	@Override
 	public void saveBookCopy(Book book) {
 		HashMap<String, Book> books = readBooksMap();
@@ -55,6 +73,16 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.BOOKS, books);
 		
 	}
+	
+	@Override
+	public void saveBook(Book book) {
+		// TODO Auto-generated method stub
+		HashMap<String, Book> books = readBooksMap();
+		books.put(book.getIsbn(), book);
+		saveToStorage(StorageType.BOOKS, books);
+		
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public  HashMap<String,Book> readBooksMap() {

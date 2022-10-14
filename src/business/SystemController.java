@@ -1,5 +1,6 @@
 package business;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,32 @@ public class SystemController implements ControllerInterface {
 		newBook.setCopy(Integer.parseInt(numOfCopies));
 		da.saveNewBook(newBook);
 		System.out.println("book: "+ newBook.getNumCopies());
+	}
+	 
+	public void checkoutBook(String memberId,String isbn) throws CheckoutException{
+		
+		DataAccess data= new DataAccessFacade();
+		LibraryMember member=data.searchMember(memberId);
+		if(member==null)throw new CheckoutException("member with id "+ memberId+" not found");
+		Book book = data.searchBook(isbn);
+		if(book==null)throw new CheckoutException("book with ISBN "+ isbn+" not found");
+		if(book.isAvailable()) {
+			BookCopy bookCopy = book.getNextAvailableCopy();
+			int checkoutLength= book.getMaxCheckoutLength();
+			member.checkout(bookCopy,LocalDate.now(),LocalDate.now().plusDays(checkoutLength));
+			data.saveMember(member);
+			data.saveBook(book);
+			
+		}else {
+			throw new CheckoutException("book with ISBN "+ isbn+" not avilable for checkout");
+		}
+	}
+	
+	public List<CheckoutRecord> displayCheckoutRecord(String memberId)throws CheckoutException{
+		DataAccess data= new DataAccessFacade();
+		LibraryMember member=data.searchMember(memberId);
+		if(member==null)throw new CheckoutException("member with id "+ memberId+" not found");
+		return member.getEntry();
 	}
 	
 	
