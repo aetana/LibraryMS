@@ -14,13 +14,13 @@ final public class RuleSetFactory {
 	static {
 		map.put("loginContentPane", new FrameLoginRS());
 		map.put("panelCheckoutBook", new CheckoutBookRS());
-		map.put("panelAddMember", new FrameLoginRS());
-		map.put("panelAddBookCopy", new FrameLoginRS());
+		map.put("panelAddMember", new AddMemberRS());
+		map.put("panelAddBookCopy", new AddBookCopyRS());
 		//map.put("panelAllBookIds", new FrameLoginRS());		
 		//map.put("panelAllMemberIds", new FrameLoginRS());		
-		map.put("panelAddBook", new FrameLoginRS());		
-		//map.put("panelOverdue", new FrameLoginRS());
-		map.put("panelCheckoutRecord", new FrameLoginRS());
+		map.put("panelAddBook", new AddBookRS());		
+		map.put("panelOverdue", new OverdueRS());
+		map.put("panelCheckoutRecord", new CheckoutBookRS());
 
 	}
 	public static RuleSet getRuleSet(Component c) {

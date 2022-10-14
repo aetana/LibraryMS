@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.MenuEvent;
 
 import business.AddMemberException;
+import business.Author;
 import business.BookException;
 import business.ControllerInterface;
 import business.LoginException;
@@ -19,6 +20,8 @@ import rulesets.RuleSetFactory;
 
 import javax.swing.JLayeredPane;
 import java.awt.CardLayout;
+
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -92,11 +95,11 @@ public class MainWindow extends JFrame implements LibWindow {
 	private JTable tableOverdue;
 	private SystemController controller = new SystemController();
 	
-	public String getTextMemberID() {
+	public String getTextMemberIDValue() {
 		return textMemberID.getText();
 	}
 
-	public String getTextISBN() {
+	public String getTextISBNValue() {
 		return textISBN.getText();
 	}
 
@@ -301,10 +304,11 @@ public class MainWindow extends JFrame implements LibWindow {
 				clearFields();
 				showMessage(e.getMessage());
 			}
-			catch(LoginException e) {
+			
+			catch(AddMemberException e) {
 				showMessage(e.getMessage());
 			}
-			catch(AddMemberException e) {
+			catch(Exception e) {
 				showMessage(e.getMessage());
 			}
 /*
@@ -546,8 +550,44 @@ public class MainWindow extends JFrame implements LibWindow {
 		btnAddNewBook.setBackground(new Color(0, 64, 64));
 		btnAddNewBook.setBounds(405, 357, 157, 53);
 		panelAddBook.add(btnAddNewBook);
+		btnAddNewBook.addActionListener(evt -> {
+			try {
+				RuleSet rules = RuleSetFactory.getRuleSet(getPanel());
+				rules.applyRules(this);
+				
+				String isbn = textAddBookISBN.getText().trim();
+				String title = textTitle.getText().trim();
+				String checkoutPeriod = textCheckoutPeriod.getText().trim();
+				String numOfCopies = textFNumberOfCopies.getText().trim();
+//				String author = listAuthor.
+				
+				controller.addBook(isbn, title, checkoutPeriod, numOfCopies, Author.getAuthors());					
+				showMessage("New Book Added Successfully!");
+				
+				//JOptionPane.showMessageDialog(this,"Successful Login");
+				
+			} catch(RuleException e) {
+				//JOptionPane.showMessageDialog(contentPane, );
+				clearFields();
+				showMessage(e.getMessage());
+			}
+			
+			catch(BookException e) {
+				showMessage(e.getMessage());
+			}
+			catch(Exception e) {
+				showMessage(e.getMessage());
+			}
 
-		JList listAuthor = new JList();
+		});
+		DefaultListModel<String> model = new DefaultListModel();
+		JList listAuthor = new JList(model);
+		List<Author> authors = Author.getAuthors();
+		// Initialize the list with items
+		for (Author auth: authors) {
+		  model.add(authors.indexOf(auth), auth.toString());
+
+		}
 		listAuthor.setBounds(362, 279, 246, 33);
 		panelAddBook.add(listAuthor);
 	}

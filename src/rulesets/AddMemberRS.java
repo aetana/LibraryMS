@@ -2,6 +2,7 @@ package rulesets;
 
 import java.awt.Component;
 
+import business.AddMemberException;
 import business.LoginException;
 import librarysystem.MainWindow;
 
@@ -11,7 +12,7 @@ public class AddMemberRS implements RuleSet{
 	private MainWindow mainWin;
 
 	@Override
-	public void applyRules(Component ob) throws RuleException, LoginException {
+	public void applyRules(Component ob) throws RuleException, AddMemberException {
 		
 		mainWin = (MainWindow) ob;
 		nonemptyRule();

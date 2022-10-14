@@ -62,5 +62,16 @@ public class SystemController implements ControllerInterface {
 		System.out.println("book: "+ book.getNumCopies());
 	}
 	
+	public void addBook(String isbn, String title, String checkoutPeriod, String numOfCopies, List<Author> authors) throws BookException{
+		DataAccess da = new DataAccessFacade();
+		Book book = da.searchBook(isbn);
+		if(book != null) throw new BookException("Book Already Exists, Please add copy instead");
+
+		Book newBook = new Book(isbn, title, Integer.parseInt(checkoutPeriod), authors);
+		newBook.setCopy(Integer.parseInt(numOfCopies));
+		da.saveNewBook(newBook);
+		System.out.println("book: "+ newBook.getNumCopies());
+	}
+	
 	
 }

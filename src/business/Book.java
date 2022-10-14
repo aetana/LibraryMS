@@ -35,6 +35,10 @@ final public class Book implements Serializable {
 			}
 		}
 	}
+	
+	public void setCopy(int numOfCopies) {
+		copies = new BookCopy[]{new BookCopy(this, numOfCopies, true)};	
+	}
 
 	public List<Integer> getCopyNums() {
 		List<Integer> retVal = new ArrayList<>();

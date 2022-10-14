@@ -30,8 +30,8 @@ public class CheckoutBookRS implements RuleSet {
 	
 	//1. All fields must be nonempty
 	private void nonemptyRule() throws RuleException {
-		if(mainWin.getTextMemberID().trim().isEmpty() ||
-				mainWin.getTextMemberID().trim().isEmpty() ) {
+		if(mainWin.getTextMemberIDValue().trim().isEmpty() ||
+				mainWin.getTextMemberIDValue().trim().isEmpty() ) {
 			throw new RuleException("All fields must be non-empty!");
 		}
 	}
@@ -41,7 +41,7 @@ public class CheckoutBookRS implements RuleSet {
 	//3. If Isbn has length 10, the first digit must be 0 or 1
 	//4. If Isbn has length 13, the first 3 digits must be either 978 or 979
 	private void isbnNumericCharacterRule() throws RuleException {
-		String val = mainWin.getTextISBN().trim();
+		String val = mainWin.getTextISBNValue().trim();
 		try {
 			Long.parseLong(val);
 			//val is numeric
@@ -58,7 +58,7 @@ public class CheckoutBookRS implements RuleSet {
 	
 	// MemberID must be numeric
 	private void idNumericRule() throws RuleException {
-		String val = mainWin.getTextMemberID().trim();
+		String val = mainWin.getTextMemberIDValue().trim();
 		try {
 			Integer.parseInt(val);
 			//val is numeric

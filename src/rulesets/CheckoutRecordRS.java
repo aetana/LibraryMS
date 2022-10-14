@@ -18,8 +18,8 @@ public class CheckoutRecordRS implements RuleSet{
 	
 	//1. All fields must be nonempty
 	private void nonemptyRule() throws RuleException {
-		if(mainWin.getTextMemberID().trim().isEmpty() ||
-				mainWin.getTextMemberID().trim().isEmpty() ) {
+		if(mainWin.getTextMemberIDValue().trim().isEmpty() ||
+				mainWin.getTextMemberIDValue().trim().isEmpty() ) {
 			throw new RuleException("All fields must be non-empty!");
 		}
 	}
@@ -27,7 +27,7 @@ public class CheckoutRecordRS implements RuleSet{
 	
 	// MemberID must be numeric
 	private void idNumericRule() throws RuleException {
-		String val = mainWin.getTextMemberID().trim();
+		String val = mainWin.getTextMemberIDValue().trim();
 		try {
 			Integer.parseInt(val);
 			//val is numeric

@@ -186,6 +186,9 @@ public class FrameLogin extends JFrame implements LibWindow{
 				showMessage("Username and Password Cannot be Empty! \n " + e.getMessage());
 			}catch(LoginException e) {
 				showMessage(e.getMessage());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 				
 		});
