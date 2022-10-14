@@ -24,6 +24,7 @@ import java.awt.CardLayout;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
@@ -604,16 +605,16 @@ public class MainWindow extends JFrame implements LibWindow {
 			}
 
 		});
-		DefaultListModel<String> model = new DefaultListModel();
-		JList listAuthor = new JList(model);
+		
+		JComboBox<String> authorsJComboBox = new JComboBox<>();
+		
 		List<Author> authors = Author.getAuthors();
-		// Initialize the list with items
-		for (Author auth: authors) {
-		  model.add(authors.indexOf(auth), auth.toString());
-
+		for(Author a:authors) {
+			authorsJComboBox.addItem(a.toString());
 		}
-		listAuthor.setBounds(362, 279, 246, 33);
-		panelAddBook.add(listAuthor);
+		
+		authorsJComboBox.setBounds(362, 279, 246, 33);
+		panelAddBook.add(authorsJComboBox);
 	}
 	
 	private void overduePanel() {
