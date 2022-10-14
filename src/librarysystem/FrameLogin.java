@@ -11,10 +11,16 @@ import javax.swing.border.LineBorder;
 import business.ControllerInterface;
 import business.SystemController;
 import dataaccess.Auth;
+
+import rulesets.RuleException;
+import rulesets.RuleSet;
+import rulesets.RuleSetFactory;
 import business.LoginException;
 
 
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
@@ -42,7 +48,7 @@ public class FrameLogin extends JFrame implements LibWindow{
 	private Image user = new ImageIcon(FrameLogin.class.getResource("user.png")).getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH);
 	private Image pass = new ImageIcon(FrameLogin.class.getResource("pass.png")).getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 	
-	private JPanel contentPane;
+
 	private JTextField txtUsername;
 	private JPasswordField pwdPassword;
 	private JLabel lblLogo;
@@ -66,6 +72,10 @@ public class FrameLogin extends JFrame implements LibWindow{
 			
 		}
 	}
+	
+	public Component getPanel() {
+		return contentPane;
+	}
 	/**
 	 * Create the frame.
 	 */
@@ -84,6 +94,7 @@ public class FrameLogin extends JFrame implements LibWindow{
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.setName("loginContentPane");
 		
 		JPanel userNamePanel = new JPanel();
 		userNamePanel.setBounds(166, 142, 250, 40);
@@ -107,8 +118,8 @@ public class FrameLogin extends JFrame implements LibWindow{
 		
 		JPanel passwordPanel = new JPanel();
 		passwordPanel.setBounds(166, 216, 250, 40);
-		contentPane.add(passwordPanel);
 		passwordPanel.setLayout(null);
+		contentPane.add(passwordPanel);
 		
 		pwdPassword = new JPasswordField();
 		pwdPassword.setHorizontalAlignment(SwingConstants.CENTER);
@@ -156,37 +167,47 @@ public class FrameLogin extends JFrame implements LibWindow{
 	
 	private void addLoginButtonListener(JButton butn) {
 		butn.addActionListener(evt -> {
-			
-			String name = txtUsername.getText().trim();
-			String pwd = pwdPassword.getText().trim();
-			System.out.println(name.isEmpty());
-			System.out.println(pwd.isEmpty());
-			if(name.isEmpty() || pwd.isEmpty()) {
-				showMessage("Username and Password Cannot be Empty!");
-			}else {
-				System.out.println(name);
-				try {
-					ci.login(name, pwd);
-					FrameLogin.hideAllWindows();
-					txtUsername.setText("");
-					pwdPassword.setText("");
-					
-					MainWindow.INSTANCE.setTitle("MIU Library");
-					MainWindow.INSTANCE.init();
-					Util.centerFrameOnDesktop(MainWindow.INSTANCE);
-					MainWindow.INSTANCE.setVisible(true);
-					//JOptionPane.showMessageDialog(this,"Successful Login");
-				}
-				catch(LoginException e) {
-					showMessage(e.getMessage());
-				}
+			try {
+				RuleSet rules = RuleSetFactory.getRuleSet(contentPane);
+				rules.applyRules(this);
 				
+				FrameLogin.hideAllWindows();
+				clearFields();
+				
+				MainWindow.INSTANCE.setTitle("MIU Library");
+				MainWindow.INSTANCE.init();
+				Util.centerFrameOnDesktop(MainWindow.INSTANCE);
+				MainWindow.INSTANCE.setVisible(true);
+				//JOptionPane.showMessageDialog(this,"Successful Login");
+				
+			} catch(RuleException e) {
+				//JOptionPane.showMessageDialog(contentPane, );
+				clearFields();
+				showMessage("Username and Password Cannot be Empty! \n " + e.getMessage());
+			}catch(LoginException e) {
+				showMessage(e.getMessage());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 				
 		});
 	}
+	private void clearFields() {
+		txtUsername.setText("");
+		pwdPassword.setText("");
+	}
 	
 	private void showMessage(String msg) {
 		JOptionPane.showMessageDialog(this,msg);
+	}
+	
+	private JPanel contentPane;
+	public String getTxtUsernameValue() {
+		return txtUsername.getText();
+	}
+
+	public String getPwdPasswordValue() {
+		return pwdPassword.getText();
 	}
 }
