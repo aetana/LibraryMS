@@ -20,6 +20,8 @@ import rulesets.RuleSet;
 import rulesets.RuleSetFactory;
 
 import javax.swing.JLayeredPane;
+
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 
 import javax.swing.DefaultListModel;
@@ -36,6 +38,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -450,19 +453,56 @@ public class MainWindow extends JFrame implements LibWindow {
 		panelAllBookIds = new JPanel();
 		panelAllBookIds.setName("panelAllBookIds");
 		panelAllBookIds.setBackground(new Color(64, 128, 128));
-		layeredPane.add(panelAllBookIds, "name_176499964787600");
 		panelAllBookIds.setLayout(null);
+		layeredPane.add(panelAllBookIds, "name_176499964787600");
+		
+		
+			///
+		
+		
+		
+		///
 
 		JLabel lblAllBookIds = new JLabel("ALL BOOK IDs");
+		
 		lblAllBookIds.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAllBookIds.setForeground(Color.WHITE);
 		lblAllBookIds.setFont(new Font("Tahoma", Font.BOLD, 26));
 		lblAllBookIds.setBounds(272, 32, 227, 32);
 		panelAllBookIds.add(lblAllBookIds);
-
-		scrollPaneBookID = new JScrollPane();
-		scrollPaneBookID.setBounds(59, 87, 718, 357);
+		
+/////
+		String[] column = {"ISBN", "TITLE", "AUTHOR", "NUMBER OF COPIES"};
+		String[][] row = {
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"},
+				{"1000", "Secret", "Teddy", "5"}
+			
+		};
+		JTable tableBookIDs = new JTable(row, column);		
+		tableBookIDs.setPreferredScrollableViewportSize(new Dimension(700,100));
+		tableBookIDs.setFillsViewportHeight(true);
+		scrollPaneBookID = new JScrollPane(tableBookIDs);
+		scrollPaneBookID .setBounds(56, 82, 718, 250);
+	////	
+		//scrollPaneBookID = new JScrollPane();
+		
 		panelAllBookIds.add(scrollPaneBookID);
+		
+		
 	}
 	
 	private void allMemberIdsPanel() {
@@ -773,12 +813,17 @@ public class MainWindow extends JFrame implements LibWindow {
 		mnItemAllBookIds.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemAllBookIds.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				/*
 				List<String> books = controller.allBookIds();
 				System.out.println(Arrays.toString(books.toArray()));
 				JTextArea textArea = new JTextArea(Arrays.toString(books.toArray()), books.size(), 0);
 				scrollPaneBookID.setViewportView(textArea);
+				*/
+				//allBookIdsPanel();
 				switchPanels(panelAllBookIds);
+		
+				
+				
 				
 			}
 		});
