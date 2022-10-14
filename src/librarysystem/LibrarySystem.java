@@ -17,11 +17,12 @@ import javax.swing.JPanel;
 
 import business.ControllerInterface;
 import business.SystemController;
+import dataaccess.Auth;
 
 
 public class LibrarySystem extends JFrame implements LibWindow {
 	ControllerInterface ci = new SystemController();
-	public final static LibrarySystem INSTANCE =new LibrarySystem();
+	public final static LibrarySystem INSTANCE = new LibrarySystem();
 	JPanel mainPanel;
 	JMenuBar menuBar;
     JMenu options;
@@ -33,7 +34,8 @@ public class LibrarySystem extends JFrame implements LibWindow {
     	LibrarySystem.INSTANCE,
 		LoginWindow.INSTANCE,
 		AllMemberIdsWindow.INSTANCE,	
-		AllBookIdsWindow.INSTANCE
+		AllBookIdsWindow.INSTANCE,
+		FrameLogin.INSTANCE
 	};
     	
 	public static void hideAllWindows() {
@@ -81,6 +83,7 @@ public class LibrarySystem extends JFrame implements LibWindow {
     }
     
     private void addMenuItems() {
+    	
        options = new JMenu("Options");  
  	   menuBar.add(options);
  	   login = new JMenuItem("Login");
@@ -89,9 +92,20 @@ public class LibrarySystem extends JFrame implements LibWindow {
  	   allBookIds.addActionListener(new AllBookIdsListener());
  	   allMemberIds = new JMenuItem("All Member Ids");
  	   allMemberIds.addActionListener(new AllMemberIdsListener());
- 	   options.add(login);
- 	   options.add(allBookIds);
- 	   options.add(allMemberIds);
+ 	   if(SystemController.currentAuth == Auth.ADMIN) {
+ 		  options.add(login);
+ 	 	  options.add(allBookIds);
+ 	   }
+ 	   else if(SystemController.currentAuth == Auth.LIBRARIAN) {
+ 		  options.add(login);
+ 	 	  options.add(allMemberIds);
+ 	   }
+ 	   else {
+ 		  options.add(login);
+ 	 	  options.add(allBookIds);
+ 	 	  options.add(allMemberIds);
+ 	   }
+ 	   
     }
     
     class LoginListener implements ActionListener {
