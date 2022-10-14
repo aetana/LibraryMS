@@ -301,7 +301,7 @@ public class MainWindow extends JFrame implements LibWindow {
 				
 			} catch(RuleException e) {
 				//JOptionPane.showMessageDialog(contentPane, );
-				clearFields();
+				//clearFields();
 				showMessage(e.getMessage());
 			}
 			
@@ -568,7 +568,7 @@ public class MainWindow extends JFrame implements LibWindow {
 				
 			} catch(RuleException e) {
 				//JOptionPane.showMessageDialog(contentPane, );
-				clearFields();
+				//clearFields();
 				showMessage(e.getMessage());
 			}
 			

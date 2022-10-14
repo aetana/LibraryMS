@@ -39,7 +39,7 @@ public class AddMemberRS implements RuleSet{
 			Integer.parseInt(val);
 			//val is numeric
 		} catch(NumberFormatException e) {
-			throw new RuleException("ID must be numeric");
+			throw new RuleException("Phone Number  must be numeric");
 		}
 		if(val.length() != 10) throw new RuleException("Telephone must have 10 digits");
 	}
