@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 import dataaccess.Auth;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
@@ -42,6 +43,23 @@ public class SystemController implements ControllerInterface {
 		List<String> retval = new ArrayList<>();
 		retval.addAll(da.readBooksMap().keySet());
 		return retval;
+	}
+	
+	public void addMember (String fname, String lname, String telephone, String street, String city, String state, String zip) throws AddMemberException{
+		DataAccess da = new DataAccessFacade();
+		Address address = new Address(street, city, state, zip);
+		String memberId = (int)(Math.random()*1000)+"";		
+		LibraryMember member = new LibraryMember(memberId, fname, lname, telephone, address);
+		da.saveNewMember(member);
+	}
+	
+	public void addBookCopy(String isbn, String numOfCopies) throws BookException{
+		DataAccess da = new DataAccessFacade();
+		Book book = da.searchBook(isbn);
+		if(book == null) throw new BookException("Book Not Found!");
+		book.addCopy();
+		da.saveBookCopy(book);
+		System.out.println("book: "+ book.getNumCopies());
 	}
 	
 	
