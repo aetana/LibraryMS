@@ -11,8 +11,8 @@ public class Main {
 	public static void main(String[] args) {
 	      EventQueue.invokeLater(() -> 
 	         {
-	        	FrameLogin.INSTANCE.setTitle("Sample Library Application");
-				FrameLogin.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        	//FrameLogin.INSTANCE.setTitle("Sample Library Application");
+				//FrameLogin.INSTANCE.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 				FrameLogin.INSTANCE.init();
 				centerFrameOnDesktop(LibrarySystem.INSTANCE);
