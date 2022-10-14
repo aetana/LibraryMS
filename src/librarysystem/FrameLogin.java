@@ -168,10 +168,13 @@ public class FrameLogin extends JFrame implements LibWindow{
 				try {
 					ci.login(name, pwd);
 					FrameLogin.hideAllWindows();
+					txtUsername.setText("");
+					pwdPassword.setText("");
+					
 					MainWindow.INSTANCE.init();
 					Util.centerFrameOnDesktop(MainWindow.INSTANCE);
 					MainWindow.INSTANCE.setVisible(true);
-					JOptionPane.showMessageDialog(this,"Successful Login");
+					//JOptionPane.showMessageDialog(this,"Successful Login");
 				}
 				catch(LoginException e) {
 					showMessage(e.getMessage());
