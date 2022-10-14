@@ -8,12 +8,12 @@ import librarysystem.FrameLogin;
 import librarysystem.MainWindow;
 
 public class AddBookRS implements RuleSet{
-	private MainWindow addBookPanel;
+	private MainWindow mainWin;
 
 	@Override
 	public void applyRules(Component ob) throws RuleException {
 		// TODO Auto-generated method stub
-		addBookPanel = (MainWindow) ob;
+		mainWin = (MainWindow) ob;
 		nonemptyRule();
 		isbnNumericCharacterRule();
 		numberOfCopiesNumericRule();
@@ -22,10 +22,10 @@ public class AddBookRS implements RuleSet{
 	
 	//1. All fields must be nonempty
 	private void nonemptyRule() throws RuleException {
-		if(addBookPanel.getTextAddBookISBN().trim().isEmpty() ||
-				addBookPanel.getTextTitleValue().trim().isEmpty() ||
-				addBookPanel.getTextCheckoutPeriodValue().trim().isEmpty() ||
-				addBookPanel.getTextFNumberOfCopiesValue().trim().isEmpty()) {
+		if(mainWin.getTextAddBookISBN().trim().isEmpty() ||
+				mainWin.getTextTitleValue().trim().isEmpty() ||
+				mainWin.getTextCheckoutPeriodValue().trim().isEmpty() ||
+				mainWin.getTextFNumberOfCopiesValue().trim().isEmpty()) {
 			throw new RuleException("All fields must be non-empty!");
 		}
 	}
@@ -35,7 +35,7 @@ public class AddBookRS implements RuleSet{
 	//3. If Isbn has length 10, the first digit must be 0 or 1
 	//4. If Isbn has length 13, the first 3 digits must be either 978 or 979
 	private void isbnNumericCharacterRule() throws RuleException {
-		String val = addBookPanel.getTextAddBookISBN().trim();
+		String val = mainWin.getTextAddBookISBN().trim();
 		try {
 			Long.parseLong(val);
 			//val is numeric
@@ -52,7 +52,7 @@ public class AddBookRS implements RuleSet{
 	
 	// numberOfCopiesNumericRule must be an integer
 	private void numberOfCopiesNumericRule() throws RuleException {
-		String val = addBookPanel.getTextFNumberOfCopiesValue().trim();
+		String val = mainWin.getTextFNumberOfCopiesValue().trim();
 		try {
 			Integer.parseInt(val);
 			//val is numeric
