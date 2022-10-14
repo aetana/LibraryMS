@@ -13,6 +13,7 @@ import business.BookException;
 import business.ControllerInterface;
 import business.LoginException;
 import business.SystemController;
+import dataaccess.Auth;
 import dataaccess.DataAccess;
 import rulesets.RuleException;
 import rulesets.RuleSet;
@@ -93,7 +94,28 @@ public class MainWindow extends JFrame implements LibWindow {
 	private JTextField textFNumberOfCopies;
 	private JTextField textOverdueISBN;
 	private JTable tableOverdue;
+	private JMenuItem mnItemAddBook;
+	private JMenuItem mnItemAddBookCopy;
+	private JMenuItem mnItemAddMember;
+	private JMenuItem mnItemCheckoutBook;
+	private JMenuItem mnItemCheckoutRecord;
+	private JMenuItem mnItemOverdue;
+	private JMenuItem mnItemAllBookIds;
+	private JMenuItem mnItemAllMemberIds;
+	
 	private SystemController controller = new SystemController();
+	
+	
+	public void switchMenu(Auth userType) {
+		if(userType == Auth.ADMIN) {
+			mnItemCheckoutBook.setEnabled(false);
+			
+		}else if(userType == Auth.LIBRARIAN) {
+			mnItemAddBook.setEnabled(false);
+		}else if(userType == Auth.BOTH) {
+			
+		}
+	}
 	
 	public String getTextMemberIDValue() {
 		return textMemberID.getText();
@@ -559,15 +581,12 @@ public class MainWindow extends JFrame implements LibWindow {
 				String title = textTitle.getText().trim();
 				String checkoutPeriod = textCheckoutPeriod.getText().trim();
 				String numOfCopies = textFNumberOfCopies.getText().trim();
-//				String author = listAuthor.
 				
 				controller.addBook(isbn, title, checkoutPeriod, numOfCopies, Author.getAuthors());					
 				showMessage("New Book Added Successfully!");
 				
-				//JOptionPane.showMessageDialog(this,"Successful Login");
 				
 			} catch(RuleException e) {
-				//JOptionPane.showMessageDialog(contentPane, );
 				clearFields();
 				showMessage(e.getMessage());
 			}
@@ -679,7 +698,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		mnAdd.setHorizontalAlignment(SwingConstants.CENTER);
 		menuBar.add(mnAdd);
 
-		JMenuItem mnItemAddBook = new JMenuItem("Book");
+		mnItemAddBook = new JMenuItem("Book");
 		mnItemAddBook.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemAddBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -688,7 +707,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		});
 		mnAdd.add(mnItemAddBook);
 
-		JMenuItem mnItemAddBookCopy = new JMenuItem("Book Copy");
+		mnItemAddBookCopy = new JMenuItem("Book Copy");
 		mnItemAddBookCopy.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemAddBookCopy.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -698,7 +717,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		});
 		mnAdd.add(mnItemAddBookCopy);
 
-		JMenuItem mnItemAddMember = new JMenuItem("Member");
+		mnItemAddMember = new JMenuItem("Member");
 		mnItemAddMember.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemAddMember.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -710,7 +729,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		JMenu mnCheckout = new JMenu("Checkout");
 		menuBar.add(mnCheckout);
 
-		JMenuItem mnItemCheckoutBook = new JMenuItem("Book");
+		mnItemCheckoutBook = new JMenuItem("Book");
 		mnItemCheckoutBook.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				switchPanels(panelCheckoutBook);
@@ -719,7 +738,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		mnItemCheckoutBook.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnCheckout.add(mnItemCheckoutBook);
 
-		JMenuItem mnItemCheckoutRecord = new JMenuItem("Record");
+		mnItemCheckoutRecord = new JMenuItem("Record");
 		mnItemCheckoutRecord.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemCheckoutRecord.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -732,7 +751,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		JMenu mnOverDue = new JMenu("Overdue");
 		menuBar.add(mnOverDue);
 
-		JMenuItem mnItemOverdue = new JMenuItem("Overdue");
+		mnItemOverdue = new JMenuItem("Overdue");
 		mnItemOverdue.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemOverdue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -745,7 +764,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		mnDisplay.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		menuBar.add(mnDisplay);
 
-		JMenuItem mnItemAllBookIds = new JMenuItem("Book IDs");
+		mnItemAllBookIds = new JMenuItem("Book IDs");
 		mnItemAllBookIds.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemAllBookIds.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -760,7 +779,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		});
 		mnDisplay.add(mnItemAllBookIds);
 
-		JMenuItem mnItemAllMemberIds = new JMenuItem("Member IDs");
+		mnItemAllMemberIds = new JMenuItem("Member IDs");
 		mnItemAllMemberIds.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemAllMemberIds.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -828,6 +847,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		addBookPanel();
 		overduePanel();
 		checkoutRecordPanel();
+		switchMenu(SystemController.currentAuth);
 
 	}
 

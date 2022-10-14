@@ -17,7 +17,7 @@ import business.LoginException;
  */
 
 public class FrameLoginRS implements RuleSet {
-	ControllerInterface ci = new SystemController();
+//	ControllerInterface ci = new SystemController();
 	
 	private FrameLogin loginWin;
 	
@@ -41,7 +41,7 @@ public class FrameLoginRS implements RuleSet {
 	private void isUserRegistered() throws LoginException{
 		String uname = loginWin.getTxtUsernameValue().trim();
 		String pword = loginWin.getPwdPasswordValue().trim();	
-		ci.login(uname, pword);
+		//ci.login(uname, pword);
 	}
 	
 	

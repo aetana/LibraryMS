@@ -170,7 +170,7 @@ public class FrameLogin extends JFrame implements LibWindow{
 			try {
 				RuleSet rules = RuleSetFactory.getRuleSet(contentPane);
 				rules.applyRules(this);
-				
+				ci.login(getTxtUsernameValue(), getPwdPasswordValue());
 				FrameLogin.hideAllWindows();
 				clearFields();
 				
