@@ -171,6 +171,7 @@ public class FrameLogin extends JFrame implements LibWindow{
 					txtUsername.setText("");
 					pwdPassword.setText("");
 					
+					MainWindow.INSTANCE.setTitle("MIU Library");
 					MainWindow.INSTANCE.init();
 					Util.centerFrameOnDesktop(MainWindow.INSTANCE);
 					MainWindow.INSTANCE.setVisible(true);
