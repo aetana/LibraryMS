@@ -10,6 +10,8 @@ import javax.swing.event.MenuEvent;
 import business.AddMemberException;
 import business.Author;
 import business.BookException;
+import business.CheckoutException;
+import business.CheckoutRecord;
 import business.ControllerInterface;
 import business.LoginException;
 import business.SystemController;
@@ -168,6 +170,36 @@ public class MainWindow extends JFrame implements LibWindow {
 		panelCheckoutBook.add(lblISBN);
 
 		JButton btnCheckout = new JButton("CHECKOUT");
+		btnCheckout.addActionListener(event->{
+			
+			try {
+				RuleSet rules = RuleSetFactory.getRuleSet(getPanel());
+				rules.applyRules(this);
+				
+				String isbn = textISBN.getText().trim();
+				String memberId = textMemberID.getText().trim();
+				
+				
+				controller.checkoutBook(memberId,isbn);	
+				
+				showMessage("Book checked out Successfully!");
+				
+				//JOptionPane.showMessageDialog(this,"Successful Login");
+				
+			} catch(RuleException e) {
+				//JOptionPane.showMessageDialog(contentPane, );
+				//clearFields();
+				showMessage(e.getMessage());
+			}
+			
+			catch(CheckoutException e) {
+				showMessage(e.getMessage());
+			}
+			catch(Exception e) {
+				showMessage(e.getMessage());
+			}
+			
+		});
 		btnCheckout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnCheckout.setBorder(null);
 		btnCheckout.setForeground(Color.WHITE);
@@ -655,6 +687,10 @@ public class MainWindow extends JFrame implements LibWindow {
 		panelOverdue.add(tableOverdue);
 	}
 	
+	public String getTextCheckoutRecordMemberID() {
+		return textCheckoutRecordMemberID.getText();
+	}
+	
 	private void checkoutRecordPanel() {
 		JPanel panelCheckoutRecord = new JPanel();
 		panelCheckoutRecord.setName("panelCheckoutRecord");
@@ -682,6 +718,39 @@ public class MainWindow extends JFrame implements LibWindow {
 		panelCheckoutRecord.add(textCheckoutRecordMemberID);
 
 		JButton btnShowRecord = new JButton("SHOW RECORD");
+		btnShowRecord.addActionListener(event->{
+			
+			try {
+				RuleSet rules = RuleSetFactory.getRuleSet(getPanel());
+				rules.applyRules(this);
+				
+				
+				String memberId = textCheckoutRecordMemberID.getText().trim();
+				
+				
+				List<CheckoutRecord> records = controller.displayCheckoutRecord(memberId);
+				if(records != null) System.out.println(Arrays.toString(records.toArray()));
+				
+				System.out.println("Member has no record!");
+				
+				showMessage("Book checked out Successfully!");
+				
+				//JOptionPane.showMessageDialog(this,"Successful Login");
+				
+			} catch(RuleException e) {
+				//JOptionPane.showMessageDialog(contentPane, );
+				//clearFields();
+				showMessage(e.getMessage());
+			}
+			
+			catch(CheckoutException e) {
+				showMessage(e.getMessage());
+			}
+			catch(Exception e) {
+				showMessage(e.getMessage());
+			}
+			
+		});
 		btnShowRecord.setForeground(Color.WHITE);
 		btnShowRecord.setFont(new Font("Tahoma", Font.BOLD, 20));
 		btnShowRecord.setBorder(null);

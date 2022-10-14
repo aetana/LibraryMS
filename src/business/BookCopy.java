@@ -26,6 +26,10 @@ final public class BookCopy implements Serializable {
 	public boolean isAvailable() {
 		return isAvailable;
 	}
+	
+	public void setAvailablity(boolean avilabele) {
+		isAvailable= avilabele;
+	}
 
 	public int getCopyNum() {
 		return copyNum;

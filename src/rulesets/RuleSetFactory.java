@@ -20,7 +20,7 @@ final public class RuleSetFactory {
 		//map.put("panelAllMemberIds", new FrameLoginRS());		
 		map.put("panelAddBook", new AddBookRS());		
 		map.put("panelOverdue", new OverdueRS());
-		map.put("panelCheckoutRecord", new CheckoutBookRS());
+		map.put("panelCheckoutRecord", new CheckoutRecordRS());
 
 	}
 	public static RuleSet getRuleSet(Component c) {
