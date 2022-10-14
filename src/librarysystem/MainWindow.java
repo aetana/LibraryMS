@@ -853,6 +853,9 @@ public class MainWindow extends JFrame implements LibWindow {
 		overduePanel();
 		checkoutRecordPanel();
 		switchMenu(SystemController.currentAuth);
+		
+		//set the first to allBookIdsPanel
+		switchPanels(panelAllBookIds);
 
 	}
 
