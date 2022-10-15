@@ -79,6 +79,11 @@ final public class Book implements Serializable {
 		return "isbn: " + isbn + ", maxLength: " + maxCheckoutLength + ", available: " + isAvailable();
 	}
 	
+	
+	public String[] toStringArray() {
+		return new String[] {getIsbn(),getTitle(),getNumCopies()+""};
+	}
+	
 	public int getNumCopies() {
 		return copies.length;
 	}

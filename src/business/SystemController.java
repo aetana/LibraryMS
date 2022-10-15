@@ -31,18 +31,18 @@ public class SystemController implements ControllerInterface {
 		
 	}
 	@Override
-	public List<String> allMemberIds() {
+	public List<LibraryMember> allMemberIds() {
 		DataAccess da = new DataAccessFacade();
-		List<String> retval = new ArrayList<>();
-		retval.addAll(da.readMemberMap().keySet());
+		List<LibraryMember> retval = new ArrayList<>();
+		retval.addAll(da.readMemberMap().values());
 		return retval;
 	}
 	
 	@Override
-	public List<String> allBookIds() {
+	public List<Book> allBookIds() {
 		DataAccess da = new DataAccessFacade();
-		List<String> retval = new ArrayList<>();
-		retval.addAll(da.readBooksMap().keySet());
+		List<Book> retval = new ArrayList<>();
+		retval.addAll(da.readBooksMap().values());
 		return retval;
 	}
 	
@@ -77,28 +77,87 @@ public class SystemController implements ControllerInterface {
 	public void checkoutBook(String memberId,String isbn) throws CheckoutException{
 		
 		DataAccess data= new DataAccessFacade();
-		LibraryMember member=data.searchMember(memberId);
-		if(member==null)throw new CheckoutException("member with id "+ memberId+" not found");
+		LibraryMember member = data.searchMember(memberId);
+		if(member == null)throw new CheckoutException("member with id "+ memberId+" not found");
 		Book book = data.searchBook(isbn);
-		if(book==null)throw new CheckoutException("book with ISBN "+ isbn+" not found");
+		if(book == null)throw new CheckoutException("book with ISBN "+ isbn+" not found");
+		
+		List<String[]> records = getMemberCheckoutEntries(memberId);
 		if(book.isAvailable()) {
+			for (String[] rec: records) {
+	            if (memberId.equals(rec[0]) && isbn.equals(rec[1]))
+	                throw new CheckoutException("Book ISBN " + rec[1] + " has been carried with the Member ID " + rec[0] + " before!");
+	        }
 			BookCopy bookCopy = book.getNextAvailableCopy();
 			int checkoutLength= book.getMaxCheckoutLength();
-			member.checkout(bookCopy,LocalDate.now(),LocalDate.now().plusDays(checkoutLength));
-			data.saveMember(member);
-			data.saveBook(book);
+			
+			CheckoutEntry entry = new CheckoutEntry(bookCopy,LocalDate.now(),LocalDate.now().plusDays(checkoutLength));
+			member.getCheckoutRecord().addCheckOutEntry(entry);
+			data.updateMember(member);
+			updateBook(book);
 			
 		}else {
 			throw new CheckoutException("book with ISBN "+ isbn+" not avilable for checkout");
 		}
 	}
 	
-	public List<CheckoutRecord> displayCheckoutRecord(String memberId)throws CheckoutException{
-		DataAccess data= new DataAccessFacade();
-		LibraryMember member=data.searchMember(memberId);
-		if(member==null)throw new CheckoutException("member with id "+ memberId+" not found");
-		return member.getEntry();
-	}
+	public void updateBook(Book book) throws CheckoutException {
+        DataAccess da = new DataAccessFacade();
+        if (book == null) {
+            throw new CheckoutException("Book is null");
+        }
+        da.updateBook(book);
+    }
 	
+	public List<String[]> getMemberCheckoutEntries(String memberId) throws CheckoutException{
+		DataAccess data= new DataAccessFacade();
+		LibraryMember member = data.searchMember(memberId);
+        if (member == null) {
+            throw new CheckoutException("Member with with id '" + memberId + "' does not exist");
+        }
+        System.out.println("in get mebbere: "+ member.getCheckoutRecord());
+        List<CheckoutEntry> checkoutBooks = new ArrayList<>();
+        if(member.getCheckoutRecord() != null || member.getCheckoutRecord().getCheckoutRecordEntries() != null) {
+        	 checkoutBooks = member.getCheckoutRecord().getCheckoutRecordEntries();
+        }
+        List<String[]> records = new ArrayList<>();
+        //String pattern = "MM/dd/yyyy";
+        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        for (CheckoutEntry ch : checkoutBooks) {
+            String[] recs = new String[]{
+                    memberId,
+                    ch.getBookCopy().getBook().getIsbn(),
+                    Integer.toString(ch.getBookCopy().getCopyNum()),
+                    ch.getCheckoutDate().toString(),
+                    ch.getDueDate().toString(),
+            };
+//          System.out.println(Arrays.toString(recs) + " |||||||||||");
+            records.add(recs);
+        }
+        return records;
+    }
+
+	public List<CheckoutEntry> checkOverdue(String isbn) throws OverdueException{
+	    DataAccess data = new DataAccessFacade();
+	    Book book = data.searchBook(isbn);
+	    if(book==null)throw new OverdueException("book with ISBN "+ isbn+" not found");
+	    List<CheckoutEntry> records = CheckoutRecord.getAllCheckoutRecordEntries();
+	    List<String[]> strRecords = new ArrayList<>();
+	    for(CheckoutEntry entry: records) {
+	      System.out.println("entry :" + entry.isOverDue());
+	      if(entry.isOverDue() && entry.getBookCopy().getBook().getIsbn() == isbn) {
+	        records.add(entry);
+	      }
+	    }
+	    return records;
+
+	  }
+//	public List<CheckoutRecord> displayCheckoutRecord(String memberId)throws CheckoutException{
+//		DataAccess data= new DataAccessFacade();
+//		LibraryMember member=data.searchMember(memberId);
+//		if(member==null)throw new CheckoutException("member with id "+ memberId+" not found");
+//		return member.getEntry();
+//	}
+//	
 	
 }

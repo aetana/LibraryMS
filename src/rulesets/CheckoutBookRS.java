@@ -23,8 +23,8 @@ public class CheckoutBookRS implements RuleSet {
 		// TODO Auto-generated method stub
 		mainWin = (MainWindow) ob;
 		nonemptyRule();
-		isbnNumericCharacterRule();
-		idNumericRule();
+		//isbnNumericCharacterRule();
+		//idNumericRule();
 		
 	}
 	
@@ -42,12 +42,12 @@ public class CheckoutBookRS implements RuleSet {
 	//4. If Isbn has length 13, the first 3 digits must be either 978 or 979
 	private void isbnNumericCharacterRule() throws RuleException {
 		String val = mainWin.getTextISBNValue().trim();
-		try {
-			Long.parseLong(val);
-			//val is numeric
-		} catch(NumberFormatException e) {
-			throw new RuleException("ISBN must be numeric");
-		}
+//		try {
+//			Long.parseLong(val);
+//			//val is numeric
+//		} catch(NumberFormatException e) {
+//			throw new RuleException("ISBN must be numeric");
+//		}
 		if(val.length() != 10 && val.length() != 13) throw new RuleException("ISBN must consist of either 10 or 13 characters");
 		if(val.length() == 10 && (val.charAt(0) != 48 && val.charAt(0) != 49)) 
 			throw new RuleException("If ISBN has length 10, the first digit must be 0 or 1");

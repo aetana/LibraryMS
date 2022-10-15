@@ -9,11 +9,15 @@ import javax.swing.event.MenuEvent;
 
 import business.AddMemberException;
 import business.Author;
+import business.Book;
 import business.BookException;
+import business.CheckoutEntry;
 import business.CheckoutException;
 import business.CheckoutRecord;
 import business.ControllerInterface;
+import business.LibraryMember;
 import business.LoginException;
+import business.OverdueException;
 import business.SystemController;
 import dataaccess.Auth;
 import dataaccess.DataAccess;
@@ -34,6 +38,7 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenuBar;
@@ -76,6 +81,7 @@ public class MainWindow extends JFrame implements LibWindow {
 	private JPanel panelAllMemberIds;
 	private JPanel panelAddBook;
 	private JPanel panelOverdue;
+	private JPanel panelAbout;
 	
 	//why is this used outside the scope of panel?
 	private JScrollPane scrollPaneBookID;
@@ -109,6 +115,9 @@ public class MainWindow extends JFrame implements LibWindow {
 	private JMenuItem mnItemAllBookIds;
 	private JMenuItem mnItemAllMemberIds;
 	private JMenu mnAdd;
+	private JTable tableBookIDs;
+	private JTable tableMemberIDs;
+	private JScrollPane tableRecordID;
 	
 	private SystemController controller = new SystemController();
 	
@@ -358,7 +367,7 @@ public class MainWindow extends JFrame implements LibWindow {
 				
 				controller.addMember(fname, lname, telephone, street, city, state, zip);					
 				showMessage("Library Member Added Successfully!");
-				
+				clearFields();
 				//JOptionPane.showMessageDialog(this,"Successful Login");
 				
 			} catch(RuleException e) {
@@ -373,29 +382,7 @@ public class MainWindow extends JFrame implements LibWindow {
 			catch(Exception e) {
 				showMessage(e.getMessage());
 			}
-/*
-			String fname = textFirstName.getText().trim();
-			String lname = textLastName.getText().trim();
-			String telephone = textTelephone.getText().trim();
-			String street = textTelephone.getText().trim();
-			String city = textCity.getText().trim();
-			String state = textState.getText().trim();
-			String zip = textZip.getText().trim();
-			if (fname.isEmpty() || lname.isEmpty() || telephone.isEmpty() || city.isEmpty() || state.isEmpty()
-					|| zip.isEmpty()) {
-				showMessage("All fields are required !");
-			} else {
 
-				try {
-					controller.addMember(fname, lname, telephone, street, city, state, zip);					
-					showMessage("Library Member Added Successfully!");
-
-				} catch (AddMemberException e) {
-					showMessage(e.getMessage());
-				}
-
-			}
-*/
 		});
 
 		btnAdd.setForeground(Color.WHITE);
@@ -489,12 +476,6 @@ public class MainWindow extends JFrame implements LibWindow {
 		panelAllBookIds.setLayout(null);
 		layeredPane.add(panelAllBookIds, "name_176499964787600");
 		
-		
-			///
-		
-		
-		
-		///
 
 		JLabel lblAllBookIds = new JLabel("ALL BOOK IDs");
 		
@@ -503,39 +484,23 @@ public class MainWindow extends JFrame implements LibWindow {
 		lblAllBookIds.setFont(new Font("Tahoma", Font.BOLD, 26));
 		lblAllBookIds.setBounds(272, 32, 227, 32);
 		panelAllBookIds.add(lblAllBookIds);
+
+		List<Book> books = controller.allBookIds();
+
+		String[] column = {"ISBN", "TITLE", "NUMBER OF COPIES"};
+		String[][] row = new String[books.size()][column.length];
 		
-/////
-		String[] column = {"ISBN", "TITLE", "AUTHOR", "NUMBER OF COPIES"};
-		String[][] row = {
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"},
-				{"1000", "Secret", "Teddy", "5"}
-			
-		};
-		JTable tableBookIDs = new JTable(row, column);		
+		for(int i = 0; i<books.size(); i++) {
+			row[i] = books.get(i).toStringArray();
+		}
+		
+		
+		tableBookIDs = new JTable(row, column);		
 		tableBookIDs.setPreferredScrollableViewportSize(new Dimension(700,100));
 		tableBookIDs.setFillsViewportHeight(true);
 		scrollPaneBookID = new JScrollPane(tableBookIDs);
-		scrollPaneBookID .setBounds(56, 82, 718, 250);
-	////	
-		//scrollPaneBookID = new JScrollPane();
-		
+		scrollPaneBookID.setBounds(56, 82, 718, 250);
 		panelAllBookIds.add(scrollPaneBookID);
-		
-		
 	}
 	
 	private void allMemberIdsPanel() {
@@ -552,9 +517,26 @@ public class MainWindow extends JFrame implements LibWindow {
 		lblAllMemberIds.setFont(new Font("Tahoma", Font.BOLD, 26));
 		panelAllMemberIds.add(lblAllMemberIds);
 
-		scrollPaneAllMemberID = new JScrollPane();
-		scrollPaneAllMemberID .setBounds(56, 82, 718, 357);
-		panelAllMemberIds.add(scrollPaneAllMemberID );
+		List<LibraryMember> members = controller.allMemberIds();
+		System.out.println(members);
+		
+		String[] column = {"ID","FRIST NAME", "LAST NAME", "TELEPHONE"};
+		String[][] row = new String[members.size()][column.length];
+		
+		for(int i = 0; i < members.size(); i++) {
+			row[i] = members.get(i).toStringArray();
+			System.out.println(Arrays.toString(members.get(i).toStringArray()));
+		}
+
+		tableMemberIDs = new JTable(row, column);		
+		tableMemberIDs.setPreferredScrollableViewportSize(new Dimension(700,100));
+		tableMemberIDs.setFillsViewportHeight(true);
+		scrollPaneAllMemberID = new JScrollPane(tableMemberIDs);
+		scrollPaneAllMemberID.setBounds(56, 82, 718, 250);
+
+		panelAllMemberIds.add(scrollPaneAllMemberID);
+		switchPanels(panelAllMemberIds);
+	
 	}
 	
 	public String getTextAddBookISBN() {
@@ -661,6 +643,7 @@ public class MainWindow extends JFrame implements LibWindow {
 				
 				controller.addBook(isbn, title, checkoutPeriod, numOfCopies, Author.getAuthors());					
 				showMessage("New Book Added Successfully!");
+				clearFields();
 				
 				
 			} catch(RuleException e) {
@@ -716,6 +699,32 @@ public class MainWindow extends JFrame implements LibWindow {
 		panelOverdue.add(textOverdueISBN);
 
 		JButton btnOverdueCheck = new JButton("CHECK");
+		btnOverdueCheck.addActionListener(evt -> {
+		      try {
+		        RuleSet rules = RuleSetFactory.getRuleSet(getPanel());
+		        rules.applyRules(this);
+		       
+		        String isbn = textOverdueISBN.getText().trim();
+		        
+		        
+		        List<CheckoutEntry> records =controller.checkOverdue(isbn);          
+		        System.out.println(Arrays.toString(records.toArray()));
+		        
+		        
+		      } catch(RuleException e) {
+		        //JOptionPane.showMessageDialog(contentPane, );
+		        //clearFields();
+		        showMessage(e.getMessage());
+		      }
+		      
+		      catch(OverdueException e) {
+		        showMessage(e.getMessage());
+		      }
+		      catch(Exception e) {
+		        showMessage(e.getMessage());
+		      }
+
+		    });
 		btnOverdueCheck.setForeground(Color.WHITE);
 		btnOverdueCheck.setFont(new Font("Tahoma", Font.BOLD, 20));
 		btnOverdueCheck.setBorder(null);
@@ -750,34 +759,43 @@ public class MainWindow extends JFrame implements LibWindow {
 		lblCheckoutMemberID.setForeground(Color.WHITE);
 		lblCheckoutMemberID.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblCheckoutMemberID.setAutoscrolls(true);
-		lblCheckoutMemberID.setBounds(26, 138, 121, 33);
+		lblCheckoutMemberID.setBounds(26, 125, 121, 33);
 		panelCheckoutRecord.add(lblCheckoutMemberID);
 
 		textCheckoutRecordMemberID = new JTextField();
 		textCheckoutRecordMemberID.setColumns(10);
-		textCheckoutRecordMemberID.setBounds(157, 140, 233, 33);
+		textCheckoutRecordMemberID.setBounds(157, 125, 233, 33);
 		panelCheckoutRecord.add(textCheckoutRecordMemberID);
 
 		JButton btnShowRecord = new JButton("SHOW RECORD");
+		btnShowRecord.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnShowRecord.addActionListener(event->{
 			
 			try {
 				RuleSet rules = RuleSetFactory.getRuleSet(getPanel());
 				rules.applyRules(this);
-				
-				
 				String memberId = textCheckoutRecordMemberID.getText().trim();
+				List<String[]> records = controller.getMemberCheckoutEntries(memberId);
+				if(records != null) System.out.println(Arrays.deepToString(records.toArray()));
+/*******************************************************/
+
+				String[] column = {"MEMBER_ID","ISBN", "NUMBER OF COPIES", "CHECKOUT_DATE", "DUE_DATE"};
+				String[][] row = new String[records.size()][column.length];
+				
+				for(int i = 0; i<records.size(); i++) {
+					row[i] = records.get(i);
+				}
 				
 				
-				List<CheckoutRecord> records = controller.displayCheckoutRecord(memberId);
-				if(records != null) System.out.println(Arrays.toString(records.toArray()));
+				tableRecord = new JTable(row, column);		
+				tableRecord.setPreferredScrollableViewportSize(new Dimension(700,100));
+				tableRecord.setFillsViewportHeight(true);
+				tableRecordID = new JScrollPane(tableRecord);
+				tableRecordID.setBounds(56, 200, 718, 200);
 				
-				System.out.println("Member has no record!");
+				panelCheckoutRecord.add(tableRecordID);
 				
-				showMessage("Book checked out Successfully!");
-				
-				//JOptionPane.showMessageDialog(this,"Successful Login");
-				
+/*******************************************************/				
 			} catch(RuleException e) {
 				//JOptionPane.showMessageDialog(contentPane, );
 				//clearFields();
@@ -796,12 +814,14 @@ public class MainWindow extends JFrame implements LibWindow {
 		btnShowRecord.setFont(new Font("Tahoma", Font.BOLD, 20));
 		btnShowRecord.setBorder(null);
 		btnShowRecord.setBackground(new Color(0, 64, 64));
-		btnShowRecord.setBounds(191, 213, 164, 53);
+		//btnShowRecord.setBounds(191, 213, 164, 53);
+		
+		btnShowRecord.setBounds(490, 125, 164, 40);
 		panelCheckoutRecord.add(btnShowRecord);
 
-		tableRecord = new JTable();
-		tableRecord.setBounds(409, 138, 401, 305);
-		panelCheckoutRecord.add(tableRecord);
+//		tableRecord = new JTable();
+//		tableRecord.setBounds(409, 138, 401, 305);
+//		panelCheckoutRecord.add(tableRecord);
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -883,18 +903,10 @@ public class MainWindow extends JFrame implements LibWindow {
 		mnItemAllBookIds.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		mnItemAllBookIds.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*
-				List<String> books = controller.allBookIds();
-				System.out.println(Arrays.toString(books.toArray()));
-				JTextArea textArea = new JTextArea(Arrays.toString(books.toArray()), books.size(), 0);
-				scrollPaneBookID.setViewportView(textArea);
-				*/
-				//allBookIdsPanel();
+				
+				allBookIdsPanel();//this is important to refresh the page
 				switchPanels(panelAllBookIds);
 		
-				
-				
-				
 			}
 		});
 		mnDisplay.add(mnItemAllBookIds);
@@ -904,12 +916,8 @@ public class MainWindow extends JFrame implements LibWindow {
 		mnItemAllMemberIds.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				List<String> members = controller.allMemberIds();
-				System.out.println(Arrays.toString(members.toArray()));
-				JTextArea textArea = new JTextArea(Arrays.toString(members.toArray()), members.size(), 0);
-				scrollPaneAllMemberID.setViewportView(textArea);
+				allMemberIdsPanel();//this is important to refresh the page
 				switchPanels(panelAllMemberIds);
-						
 				
 			}
 		});
@@ -930,9 +938,59 @@ public class MainWindow extends JFrame implements LibWindow {
 
 		JMenuItem mnItemAbout = new JMenuItem("About");
 		mnItemAbout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		mnItemAbout.addActionListener(e ->{
+			/****************************************************************************************************************/
+			aboutPanel();//this is important to refresh the page
+			switchPanels(panelAbout);
+			/****************************************************************************************************************/
+		});
 		mnAbout.add(mnItemAbout);
 	}
 	
+	private void aboutPanel() {
+		panelAbout = new JPanel();
+		panelAbout.setName("panelCheckoutBook");
+		panelAbout.setBackground(new Color(64, 128, 128));
+		layeredPane.add(panelCheckoutBook, "name_176444819990800");
+		panelAbout.setLayout(null);
+
+		JLabel lblCheckOutBook = new JLabel("Created By :");
+		lblCheckOutBook.setFont(new Font("Tahoma", Font.BOLD, 26));
+		lblCheckOutBook.setForeground(new Color(255, 255, 255));
+		lblCheckOutBook.setBounds(286, 44, 259, 46);
+		lblCheckOutBook.setHorizontalAlignment(SwingConstants.CENTER);
+		panelAbout.add(lblCheckOutBook);
+
+		JLabel lblMember1 = new JLabel("Amanuel Etana");
+		lblMember1.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMember1.setForeground(new Color(255, 255, 255));
+		lblMember1.setAutoscrolls(true);
+		lblMember1.setBounds(152, 147, 220, 33);
+		panelAbout.add(lblMember1);
+		
+
+		JLabel lblMember2 = new JLabel("Gedeon Tona");
+		lblMember2.setForeground(Color.WHITE);
+		lblMember2.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMember2.setAutoscrolls(true);
+		lblMember2.setBounds(152, 222, 220, 33);
+		panelAbout.add(lblMember2);
+		
+		JLabel lblMember3 = new JLabel("Simegnew Mulu");
+		lblMember3.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMember3.setForeground(new Color(255, 255, 255));
+		lblMember3.setAutoscrolls(true);
+		lblMember3.setBounds(452, 147, 220, 33);
+		panelAbout.add(lblMember3);
+		
+		JLabel lblMember4 = new JLabel("Tewodroes Hailu");
+		lblMember4.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMember4.setForeground(new Color(255, 255, 255));
+		lblMember4.setAutoscrolls(true);
+		lblMember4.setBounds(452, 222, 220, 33);
+		panelAbout.add(lblMember4);
+
+	}
 	private void formatContentPane() {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -948,6 +1006,8 @@ public class MainWindow extends JFrame implements LibWindow {
 		contentPane.add(layeredPane);
 		layeredPane.setLayout(new CardLayout(0, 0));
 	}
+	
+	
 	
 	@Override
 	public void init() {
@@ -967,6 +1027,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		addBookPanel();
 		overduePanel();
 		checkoutRecordPanel();
+		aboutPanel();
 		switchMenu(SystemController.currentAuth);
 		
 		//set the first to allBookIdsPanel
@@ -991,8 +1052,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		});
 	}
 
-	private MainWindow() {
-	}
+	private MainWindow() {	}
 
 	public void switchPanels(JPanel panel) {
 		layeredPane.removeAll();
@@ -1014,6 +1074,12 @@ public class MainWindow extends JFrame implements LibWindow {
 		textCity.setText("");
 		textState.setText("");
 		textZip.setText("");
+		
+		textFNumberOfCopies.setText("");
+		textCheckoutPeriod.setText("");
+		textTitle.setText("");
+		textAddBookISBN.setText("");
+
 	}
 	@Override
 	public boolean isInitialized() {
