@@ -36,7 +36,7 @@ public class AddMemberRS implements RuleSet{
 	private void telephoneNumericRule() throws RuleException {
 		String val = mainWin.getTextTelephoneValue().trim();
 		try {
-			Integer.parseInt(val);
+			Long.parseLong(val);
 			//val is numeric
 		} catch(NumberFormatException e) {
 			throw new RuleException("Phone Number  must be numeric");

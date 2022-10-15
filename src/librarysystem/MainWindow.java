@@ -11,6 +11,7 @@ import business.AddMemberException;
 import business.Author;
 import business.Book;
 import business.BookException;
+import business.CheckoutEntry;
 import business.CheckoutException;
 import business.CheckoutRecord;
 import business.ControllerInterface;
@@ -366,7 +367,7 @@ public class MainWindow extends JFrame implements LibWindow {
 				
 				controller.addMember(fname, lname, telephone, street, city, state, zip);					
 				showMessage("Library Member Added Successfully!");
-				
+				clearFields();
 				//JOptionPane.showMessageDialog(this,"Successful Login");
 				
 			} catch(RuleException e) {
@@ -642,6 +643,7 @@ public class MainWindow extends JFrame implements LibWindow {
 				
 				controller.addBook(isbn, title, checkoutPeriod, numOfCopies, Author.getAuthors());					
 				showMessage("New Book Added Successfully!");
+				clearFields();
 				
 				
 			} catch(RuleException e) {
@@ -705,8 +707,8 @@ public class MainWindow extends JFrame implements LibWindow {
 		        String isbn = textOverdueISBN.getText().trim();
 		        
 		        
-		       // List<CheckoutEntry> records =controller.checkOverdue(isbn);          
-		        //System.out.println(Arrays.toString(records.toArray()));
+		        List<CheckoutEntry> records =controller.checkOverdue(isbn);          
+		        System.out.println(Arrays.toString(records.toArray()));
 		        
 		        
 		      } catch(RuleException e) {
@@ -792,6 +794,7 @@ public class MainWindow extends JFrame implements LibWindow {
 				tableRecordID.setBounds(56, 200, 718, 200);
 				
 				panelCheckoutRecord.add(tableRecordID);
+				
 /*******************************************************/				
 			} catch(RuleException e) {
 				//JOptionPane.showMessageDialog(contentPane, );
@@ -1071,6 +1074,12 @@ public class MainWindow extends JFrame implements LibWindow {
 		textCity.setText("");
 		textState.setText("");
 		textZip.setText("");
+		
+		textFNumberOfCopies.setText("");
+		textCheckoutPeriod.setText("");
+		textTitle.setText("");
+		textAddBookISBN.setText("");
+
 	}
 	@Override
 	public boolean isInitialized() {

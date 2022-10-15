@@ -137,21 +137,21 @@ public class SystemController implements ControllerInterface {
         return records;
     }
 
-//	public List<CheckoutEntry> checkOverdue(String isbn) throws OverdueException{
-//	    DataAccess data = new DataAccessFacade();
-//	    Book book = data.searchBook(isbn);
-//	    if(book==null)throw new OverdueException("book with ISBN "+ isbn+" not found");
-//	    List<CheckoutEntry> records = CheckoutRecord.getAllCheckoutRecordEntries();
-//	    List<String[]> strRecords = new ArrayList<>();
-//	    for(CheckoutEntry entry: records) {
-//	      System.out.println("entry :" + entry.isOverDue());
-//	      if(entry.isOverDue() && entry.getCopy().getBook().getIsbn() == isbn) {
-//	        records.add(entry);
-//	      }
-//	    }
-//	    return records;
-//
-//	  }
+	public List<CheckoutEntry> checkOverdue(String isbn) throws OverdueException{
+	    DataAccess data = new DataAccessFacade();
+	    Book book = data.searchBook(isbn);
+	    if(book==null)throw new OverdueException("book with ISBN "+ isbn+" not found");
+	    List<CheckoutEntry> records = CheckoutRecord.getAllCheckoutRecordEntries();
+	    List<String[]> strRecords = new ArrayList<>();
+	    for(CheckoutEntry entry: records) {
+	      System.out.println("entry :" + entry.isOverDue());
+	      if(entry.isOverDue() && entry.getBookCopy().getBook().getIsbn() == isbn) {
+	        records.add(entry);
+	      }
+	    }
+	    return records;
+
+	  }
 //	public List<CheckoutRecord> displayCheckoutRecord(String memberId)throws CheckoutException{
 //		DataAccess data= new DataAccessFacade();
 //		LibraryMember member=data.searchMember(memberId);

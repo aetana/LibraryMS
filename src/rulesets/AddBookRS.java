@@ -57,7 +57,7 @@ public class AddBookRS implements RuleSet{
 			Integer.parseInt(val);
 			//val is numeric
 		} catch(NumberFormatException e) {
-			throw new RuleException("Price must be an Integer number!");
+			throw new RuleException("Number Of Copies must be an Integer number!");
 		}
 		
 	}

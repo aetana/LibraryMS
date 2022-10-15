@@ -18,6 +18,10 @@ public class CheckoutEntry implements Serializable{
 		this.dueDate=dueDate;	
 		
 	}
+	
+	public boolean isOverDue() {
+	    return LocalDate.now().isAfter(dueDate);
+	}
 
 	public LocalDate getCheckoutDate() {
 		return checkoutDate;

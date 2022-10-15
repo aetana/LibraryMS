@@ -12,15 +12,19 @@ public class CheckoutRecord implements Serializable {
     }
 
     public void addCheckOutEntry(CheckoutEntry checkoutRecordEntry) {
-    	//checkoutRecordEntries = new ArrayList<>();
-    	//checkoutRecordEntries.add(new CheckoutEntry(new BookCopy(new Book("1234567891", "1234567891", 7, Author.getAuthors()), 2, false), LocalDate.now(), LocalDate.now()));
-        checkoutRecordEntries.add(checkoutRecordEntry);
+    	if(checkoutRecordEntries == null)
+    		{
+    		checkoutRecordEntries = new ArrayList<>();
+        	checkoutRecordEntries.add(new CheckoutEntry(new BookCopy(new Book("1234567891", "1234567891", 7, Author.getAuthors()), 2, false), LocalDate.now(), LocalDate.now()));
+            
+    		}checkoutRecordEntries.add(checkoutRecordEntry);
     }
-/*
+
     public static List<CheckoutEntry> getAllCheckoutRecordEntries(){
-    	
+    	CheckoutRecord cr = new CheckoutRecord();
+    	return cr.checkoutRecordEntries;
     }
-   */ 
+    
     public List<CheckoutEntry> getCheckoutRecordEntries() {
     	if(checkoutRecordEntries == null) 
     	{
