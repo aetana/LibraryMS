@@ -797,16 +797,13 @@ public class MainWindow extends JFrame implements LibWindow {
 				
 /*******************************************************/				
 			} catch(RuleException e) {
-				//JOptionPane.showMessageDialog(contentPane, );
-				//clearFields();
 				showMessage(e.getMessage());
 			}
-			
 			catch(CheckoutException e) {
-				showMessage(e.getMessage());
+				showMessage("The Checkout Record is Not Found.");
 			}
 			catch(Exception e) {
-				showMessage(e.getMessage());
+				showMessage("The Checkout Record is Not Found.");
 			}
 			
 		});
@@ -818,10 +815,6 @@ public class MainWindow extends JFrame implements LibWindow {
 		
 		btnShowRecord.setBounds(490, 125, 164, 40);
 		panelCheckoutRecord.add(btnShowRecord);
-
-//		tableRecord = new JTable();
-//		tableRecord.setBounds(409, 138, 401, 305);
-//		panelCheckoutRecord.add(tableRecord);
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -1007,8 +1000,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		layeredPane.setLayout(new CardLayout(0, 0));
 	}
 	
-	
-	
+		
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
