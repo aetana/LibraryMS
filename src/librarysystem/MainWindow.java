@@ -378,29 +378,7 @@ public class MainWindow extends JFrame implements LibWindow {
 			catch(Exception e) {
 				showMessage(e.getMessage());
 			}
-/*
-			String fname = textFirstName.getText().trim();
-			String lname = textLastName.getText().trim();
-			String telephone = textTelephone.getText().trim();
-			String street = textTelephone.getText().trim();
-			String city = textCity.getText().trim();
-			String state = textState.getText().trim();
-			String zip = textZip.getText().trim();
-			if (fname.isEmpty() || lname.isEmpty() || telephone.isEmpty() || city.isEmpty() || state.isEmpty()
-					|| zip.isEmpty()) {
-				showMessage("All fields are required !");
-			} else {
 
-				try {
-					controller.addMember(fname, lname, telephone, street, city, state, zip);					
-					showMessage("Library Member Added Successfully!");
-
-				} catch (AddMemberException e) {
-					showMessage(e.getMessage());
-				}
-
-			}
-*/
 		});
 
 		btnAdd.setForeground(Color.WHITE);
@@ -502,30 +480,22 @@ public class MainWindow extends JFrame implements LibWindow {
 		lblAllBookIds.setFont(new Font("Tahoma", Font.BOLD, 26));
 		lblAllBookIds.setBounds(272, 32, 227, 32);
 		panelAllBookIds.add(lblAllBookIds);
-		
-/////
-		
+
 		List<Book> books = controller.allBookIds();
-		//String[] bookA = new Book[books.size()];
+
+		String[] column = {"ISBN", "TITLE", "NUMBER OF COPIES"};
+		String[][] row = new String[books.size()][column.length];
 		
-		String[][] row = new String[books.size()][3];
-		
-		for(int i = 0,j=0; i<books.size(); i++) {
+		for(int i = 0; i<books.size(); i++) {
 			row[i] = books.get(i).toStringArray();
 		}
 		
-		//System.out.println(row.toString());
-		String[] column = {"ISBN", "TITLE", "NUMBER OF COPIES"};
-		//String[][] rows = Arrays.toString(books.toArray().toString());
-
+		
 		tableBookIDs = new JTable(row, column);		
 		tableBookIDs.setPreferredScrollableViewportSize(new Dimension(700,100));
 		tableBookIDs.setFillsViewportHeight(true);
 		scrollPaneBookID = new JScrollPane(tableBookIDs);
 		scrollPaneBookID.setBounds(56, 82, 718, 250);
-	    //	
-		//scrollPaneBookID = new JScrollPane();
-		
 		panelAllBookIds.add(scrollPaneBookID);
 	}
 	
@@ -542,21 +512,18 @@ public class MainWindow extends JFrame implements LibWindow {
 		lblAllMemberIds.setForeground(Color.WHITE);
 		lblAllMemberIds.setFont(new Font("Tahoma", Font.BOLD, 26));
 		panelAllMemberIds.add(lblAllMemberIds);
-//*************************************/
+
 		List<LibraryMember> members = controller.allMemberIds();
 		System.out.println(members);
-		String[][] row = new String[members.size()][3];
+		
+		String[] column = {"FRIST NAME", "LAST NAME", "TELEPHONE"};
+		String[][] row = new String[members.size()][column.length];
 		
 		for(int i = 0; i < members.size(); i++) {
-			//row[i] = new String[] {members.get(i).getFirstName(),members.get(i).getLastName(), members.get(i).getTelephone()};
 			row[i] = members.get(i).toStringArray();
 			System.out.println(Arrays.toString(members.get(i).toStringArray()));
 		}
-		//for()
-		
-		String[] column = {"FRIST NAME", "LAST NAME", "TELEPHONE"};
 
-		
 		tableMemberIDs = new JTable(row, column);		
 		tableMemberIDs.setPreferredScrollableViewportSize(new Dimension(700,100));
 		tableMemberIDs.setFillsViewportHeight(true);
@@ -564,15 +531,8 @@ public class MainWindow extends JFrame implements LibWindow {
 		scrollPaneAllMemberID.setBounds(56, 82, 718, 250);
 
 		panelAllMemberIds.add(scrollPaneAllMemberID);
-
-		//allMemberIdsPanel();//this is important to refresh the page
 		switchPanels(panelAllMemberIds);
-		
-		
-//*************************************	/	
-		scrollPaneAllMemberID = new JScrollPane();
-		scrollPaneAllMemberID.setBounds(56, 82, 718, 357);
-		panelAllMemberIds.add(scrollPaneAllMemberID );
+	
 	}
 	
 	public String getTextAddBookISBN() {
@@ -902,24 +862,6 @@ public class MainWindow extends JFrame implements LibWindow {
 		mnItemAllBookIds.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				List<Book> books = controller.allBookIds();			
-				String[][] row = new String[books.size()][5];
-				
-				for(int i = 0; i<books.size(); i++) {
-					row[i] = books.get(i).toStringArray();
-				}
-				
-				String[] column = {"ISBN", "TITLE", "NUMBER OF COPIES"};
-
-				tableBookIDs = new JTable(row, column);		
-				tableBookIDs.setPreferredScrollableViewportSize(new Dimension(700,100));
-				tableBookIDs.setFillsViewportHeight(true);
-				scrollPaneBookID = new JScrollPane(tableBookIDs);
-				scrollPaneBookID .setBounds(56, 82, 718, 250);
-
-				panelAllBookIds.add(scrollPaneBookID);
-				//JTextArea textArea = new JTextArea(Arrays.toString(books.toArray()), books.size(), 0);
-				//scrollPaneBookID.setViewportView(textArea);
 				allBookIdsPanel();//this is important to refresh the page
 				switchPanels(panelAllBookIds);
 		
@@ -932,48 +874,8 @@ public class MainWindow extends JFrame implements LibWindow {
 		mnItemAllMemberIds.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				List<LibraryMember> members = controller.allMemberIds();
-				System.out.println(members);
-				String[][] row = new String[members.size()][3];
-				
-				for(int i = 0; i < members.size(); i++) {
-					//row[i] = new String[] {members.get(i).getFirstName(),members.get(i).getLastName(), members.get(i).getTelephone()};
-					row[i] = members.get(i).toStringArray();
-					System.out.println(Arrays.toString(members.get(i).toStringArray()));
-				}
-				//for()
-				
-				String[] column = {"FRIST NAME", "LAST NAME", "TELEPHONE"};
-/*
-				tableMemberIDs = new JTable(row, column);		
-				tableMemberIDs.setPreferredScrollableViewportSize(new Dimension(700,100));
-				tableMemberIDs.setFillsViewportHeight(true);
-				scrollPaneAllMemberID = new JScrollPane(tableMemberIDs);
-				scrollPaneAllMemberID.setBounds(56, 82, 718, 250);
-
-				panelAllMemberIds.add(scrollPaneAllMemberID);
-				*/
-				
-				tableMemberIDs = new JTable(row, column);		
-				tableMemberIDs.setPreferredScrollableViewportSize(new Dimension(700,100));
-				tableMemberIDs.setFillsViewportHeight(true);
-				scrollPaneAllMemberID = new JScrollPane(tableMemberIDs);
-				scrollPaneAllMemberID.setBounds(56, 82, 718, 250);
-
-				panelAllMemberIds.add(scrollPaneAllMemberID);
-				//JTextArea textArea = new JTextArea(Arrays.toString(books.toArray()), books.size(), 0);
-				//scrollPaneBookID.setViewportView(textArea);
-
 				allMemberIdsPanel();//this is important to refresh the page
 				switchPanels(panelAllMemberIds);
-				
-				
-				//List<LibraryMember> members = controller.allMemberIds();
-				//System.out.println(Arrays.toString(members.toArray()));
-				//JTextArea textArea = new JTextArea(Arrays.toString(members.toArray()), members.size(), 0);
-				//scrollPaneAllMemberID.setViewportView(textArea);
-				//switchPanels(panelAllMemberIds);
-						
 				
 			}
 		});
