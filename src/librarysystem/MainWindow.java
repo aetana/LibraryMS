@@ -79,6 +79,7 @@ public class MainWindow extends JFrame implements LibWindow {
 	private JPanel panelAllMemberIds;
 	private JPanel panelAddBook;
 	private JPanel panelOverdue;
+	private JPanel panelAbout;
 	
 	//why is this used outside the scope of panel?
 	private JScrollPane scrollPaneBookID;
@@ -516,7 +517,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		List<LibraryMember> members = controller.allMemberIds();
 		System.out.println(members);
 		
-		String[] column = {"FRIST NAME", "LAST NAME", "TELEPHONE"};
+		String[] column = {"ID","FRIST NAME", "LAST NAME", "TELEPHONE"};
 		String[][] row = new String[members.size()][column.length];
 		
 		for(int i = 0; i < members.size(); i++) {
@@ -896,9 +897,59 @@ public class MainWindow extends JFrame implements LibWindow {
 
 		JMenuItem mnItemAbout = new JMenuItem("About");
 		mnItemAbout.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		mnItemAbout.addActionListener(e ->{
+			/****************************************************************************************************************/
+			aboutPanel();//this is important to refresh the page
+			switchPanels(panelAbout);
+			/****************************************************************************************************************/
+		});
 		mnAbout.add(mnItemAbout);
 	}
 	
+	private void aboutPanel() {
+		panelAbout = new JPanel();
+		panelAbout.setName("panelCheckoutBook");
+		panelAbout.setBackground(new Color(64, 128, 128));
+		layeredPane.add(panelCheckoutBook, "name_176444819990800");
+		panelAbout.setLayout(null);
+
+		JLabel lblCheckOutBook = new JLabel("Created By :");
+		lblCheckOutBook.setFont(new Font("Tahoma", Font.BOLD, 26));
+		lblCheckOutBook.setForeground(new Color(255, 255, 255));
+		lblCheckOutBook.setBounds(286, 44, 259, 46);
+		lblCheckOutBook.setHorizontalAlignment(SwingConstants.CENTER);
+		panelAbout.add(lblCheckOutBook);
+
+		JLabel lblMember1 = new JLabel("Amanuel Etana");
+		lblMember1.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMember1.setForeground(new Color(255, 255, 255));
+		lblMember1.setAutoscrolls(true);
+		lblMember1.setBounds(152, 147, 220, 33);
+		panelAbout.add(lblMember1);
+		
+
+		JLabel lblMember2 = new JLabel("Gedeon Tona");
+		lblMember2.setForeground(Color.WHITE);
+		lblMember2.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMember2.setAutoscrolls(true);
+		lblMember2.setBounds(152, 222, 220, 33);
+		panelAbout.add(lblMember2);
+		
+		JLabel lblMember3 = new JLabel("Simegnew Mulu");
+		lblMember3.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMember3.setForeground(new Color(255, 255, 255));
+		lblMember3.setAutoscrolls(true);
+		lblMember3.setBounds(452, 147, 220, 33);
+		panelAbout.add(lblMember3);
+		
+		JLabel lblMember4 = new JLabel("Tewodroes Hailu");
+		lblMember4.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMember4.setForeground(new Color(255, 255, 255));
+		lblMember4.setAutoscrolls(true);
+		lblMember4.setBounds(452, 222, 220, 33);
+		panelAbout.add(lblMember4);
+
+	}
 	private void formatContentPane() {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -914,6 +965,8 @@ public class MainWindow extends JFrame implements LibWindow {
 		contentPane.add(layeredPane);
 		layeredPane.setLayout(new CardLayout(0, 0));
 	}
+	
+	
 	
 	@Override
 	public void init() {
@@ -933,6 +986,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		addBookPanel();
 		overduePanel();
 		checkoutRecordPanel();
+		aboutPanel();
 		switchMenu(SystemController.currentAuth);
 		
 		//set the first to allBookIdsPanel
@@ -957,8 +1011,7 @@ public class MainWindow extends JFrame implements LibWindow {
 		});
 	}
 
-	private MainWindow() {
-	}
+	private MainWindow() {	}
 
 	public void switchPanels(JPanel panel) {
 		layeredPane.removeAll();
