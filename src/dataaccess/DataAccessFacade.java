@@ -49,14 +49,14 @@ public class DataAccessFacade implements DataAccess {
 		return null;
 	}
 	
-	@Override
+	@Override 
 	public LibraryMember searchMember(String memberId) {
-		for(LibraryMember member: readMemberMap().values()) {
-			if(member.getMemberId().equals(memberId))
-				return member;
-		}
-		return null;
-	}
+        HashMap<String, LibraryMember> members = readMemberMap();
+        if (members.containsKey(memberId)) {
+            return members.get(memberId);
+        }
+        return null;
+    }
 	
 	@Override
 	public void saveBookCopy(Book book) {
@@ -83,6 +83,19 @@ public class DataAccessFacade implements DataAccess {
 		
 	}
 	
+	@Override
+    public void updateBook(Book book) {
+        HashMap<String, Book> books = readBooksMap();
+        books.put(book.getIsbn(), book);
+        saveToStorage(StorageType.BOOKS, books);
+    }
+	
+	@Override
+	public void updateMember(LibraryMember member) {
+        HashMap<String, LibraryMember> members = readMemberMap();
+        members.put(member.getMemberId(), member);
+        saveToStorage(StorageType.MEMBERS, members);
+    }
 	
 	@SuppressWarnings("unchecked")
 	public  HashMap<String,Book> readBooksMap() {

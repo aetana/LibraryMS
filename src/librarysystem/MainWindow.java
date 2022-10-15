@@ -16,6 +16,7 @@ import business.CheckoutRecord;
 import business.ControllerInterface;
 import business.LibraryMember;
 import business.LoginException;
+import business.OverdueException;
 import business.SystemController;
 import dataaccess.Auth;
 import dataaccess.DataAccess;
@@ -115,6 +116,7 @@ public class MainWindow extends JFrame implements LibWindow {
 	private JMenu mnAdd;
 	private JTable tableBookIDs;
 	private JTable tableMemberIDs;
+	private JScrollPane tableRecordID;
 	
 	private SystemController controller = new SystemController();
 	
@@ -695,6 +697,32 @@ public class MainWindow extends JFrame implements LibWindow {
 		panelOverdue.add(textOverdueISBN);
 
 		JButton btnOverdueCheck = new JButton("CHECK");
+		btnOverdueCheck.addActionListener(evt -> {
+		      try {
+		        RuleSet rules = RuleSetFactory.getRuleSet(getPanel());
+		        rules.applyRules(this);
+		       
+		        String isbn = textOverdueISBN.getText().trim();
+		        
+		        
+		       // List<CheckoutEntry> records =controller.checkOverdue(isbn);          
+		        //System.out.println(Arrays.toString(records.toArray()));
+		        
+		        
+		      } catch(RuleException e) {
+		        //JOptionPane.showMessageDialog(contentPane, );
+		        //clearFields();
+		        showMessage(e.getMessage());
+		      }
+		      
+		      catch(OverdueException e) {
+		        showMessage(e.getMessage());
+		      }
+		      catch(Exception e) {
+		        showMessage(e.getMessage());
+		      }
+
+		    });
 		btnOverdueCheck.setForeground(Color.WHITE);
 		btnOverdueCheck.setFont(new Font("Tahoma", Font.BOLD, 20));
 		btnOverdueCheck.setBorder(null);
@@ -729,34 +757,42 @@ public class MainWindow extends JFrame implements LibWindow {
 		lblCheckoutMemberID.setForeground(Color.WHITE);
 		lblCheckoutMemberID.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblCheckoutMemberID.setAutoscrolls(true);
-		lblCheckoutMemberID.setBounds(26, 138, 121, 33);
+		lblCheckoutMemberID.setBounds(26, 125, 121, 33);
 		panelCheckoutRecord.add(lblCheckoutMemberID);
 
 		textCheckoutRecordMemberID = new JTextField();
 		textCheckoutRecordMemberID.setColumns(10);
-		textCheckoutRecordMemberID.setBounds(157, 140, 233, 33);
+		textCheckoutRecordMemberID.setBounds(157, 125, 233, 33);
 		panelCheckoutRecord.add(textCheckoutRecordMemberID);
 
 		JButton btnShowRecord = new JButton("SHOW RECORD");
+		btnShowRecord.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnShowRecord.addActionListener(event->{
 			
 			try {
 				RuleSet rules = RuleSetFactory.getRuleSet(getPanel());
 				rules.applyRules(this);
-				
-				
 				String memberId = textCheckoutRecordMemberID.getText().trim();
+				List<String[]> records = controller.getMemberCheckoutEntries(memberId);
+				if(records != null) System.out.println(Arrays.deepToString(records.toArray()));
+/*******************************************************/
+
+				String[] column = {"MEMBER_ID","ISBN", "NUMBER OF COPIES", "CHECKOUT_DATE", "DUE_DATE"};
+				String[][] row = new String[records.size()][column.length];
+				
+				for(int i = 0; i<records.size(); i++) {
+					row[i] = records.get(i);
+				}
 				
 				
-				List<CheckoutRecord> records = controller.displayCheckoutRecord(memberId);
-				if(records != null) System.out.println(Arrays.toString(records.toArray()));
+				tableRecord = new JTable(row, column);		
+				tableRecord.setPreferredScrollableViewportSize(new Dimension(700,100));
+				tableRecord.setFillsViewportHeight(true);
+				tableRecordID = new JScrollPane(tableRecord);
+				tableRecordID.setBounds(56, 200, 718, 200);
 				
-				System.out.println("Member has no record!");
-				
-				showMessage("Book checked out Successfully!");
-				
-				//JOptionPane.showMessageDialog(this,"Successful Login");
-				
+				panelCheckoutRecord.add(tableRecordID);
+/*******************************************************/				
 			} catch(RuleException e) {
 				//JOptionPane.showMessageDialog(contentPane, );
 				//clearFields();
@@ -775,12 +811,14 @@ public class MainWindow extends JFrame implements LibWindow {
 		btnShowRecord.setFont(new Font("Tahoma", Font.BOLD, 20));
 		btnShowRecord.setBorder(null);
 		btnShowRecord.setBackground(new Color(0, 64, 64));
-		btnShowRecord.setBounds(191, 213, 164, 53);
+		//btnShowRecord.setBounds(191, 213, 164, 53);
+		
+		btnShowRecord.setBounds(490, 125, 164, 40);
 		panelCheckoutRecord.add(btnShowRecord);
 
-		tableRecord = new JTable();
-		tableRecord.setBounds(409, 138, 401, 305);
-		panelCheckoutRecord.add(tableRecord);
+//		tableRecord = new JTable();
+//		tableRecord.setBounds(409, 138, 401, 305);
+//		panelCheckoutRecord.add(tableRecord);
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
