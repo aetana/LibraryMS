@@ -36,9 +36,9 @@ final public class Book implements Serializable {
 		}
 	}
 	
-	public void setCopy(int numOfCopies) {
-		copies = new BookCopy[]{new BookCopy(this, numOfCopies, true)};	
-	}
+//	public void setCopy(int numOfCopies) {
+//		copies = new BookCopy[]{new BookCopy(this, numOfCopies, true)};	
+//	}
 
 	public List<Integer> getCopyNums() {
 		List<Integer> retVal = new ArrayList<>();
@@ -53,6 +53,12 @@ final public class Book implements Serializable {
 		BookCopy[] newArr = new BookCopy[copies.length + 1];
 		System.arraycopy(copies, 0, newArr, 0, copies.length);
 		newArr[copies.length] = new BookCopy(this, copies.length +1, true);
+		copies = newArr;
+	}
+	public void setCopy(int nOfCopies) {
+		BookCopy[] newArr = new BookCopy[copies.length + nOfCopies];
+		System.arraycopy(copies, 0, newArr, 0, copies.length);
+		newArr[copies.length] = new BookCopy(this, copies.length +nOfCopies, true);
 		copies = newArr;
 	}
 	

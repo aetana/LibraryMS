@@ -58,7 +58,7 @@ public class SystemController implements ControllerInterface {
 		DataAccess da = new DataAccessFacade();
 		Book book = da.searchBook(isbn);
 		if(book == null) throw new BookException("Book Not Found!");
-		book.addCopy();
+		book.setCopy(Integer.parseInt(numOfCopies));
 		da.saveBookCopy(book);
 		System.out.println("book: "+ book.getNumCopies());
 	}
