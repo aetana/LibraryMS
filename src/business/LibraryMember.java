@@ -40,6 +40,10 @@ final public class LibraryMember extends Person implements Serializable {
 		return "Member Info: " + "ID: " + memberId + ", name: " + getFirstName() + " " + getLastName() + 
 				", " + getTelephone() + " " + getAddress();
 	}
+	
+	public String[] toStringArray() {
+		return new String[] {getFirstName(),getLastName(),getTelephone()+""};
+	}
 
 	private static final long serialVersionUID = -2226197306790714013L;
 }

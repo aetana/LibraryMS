@@ -31,18 +31,18 @@ public class SystemController implements ControllerInterface {
 		
 	}
 	@Override
-	public List<String> allMemberIds() {
+	public List<LibraryMember> allMemberIds() {
 		DataAccess da = new DataAccessFacade();
-		List<String> retval = new ArrayList<>();
-		retval.addAll(da.readMemberMap().keySet());
+		List<LibraryMember> retval = new ArrayList<>();
+		retval.addAll(da.readMemberMap().values());
 		return retval;
 	}
 	
 	@Override
-	public List<String> allBookIds() {
+	public List<Book> allBookIds() {
 		DataAccess da = new DataAccessFacade();
-		List<String> retval = new ArrayList<>();
-		retval.addAll(da.readBooksMap().keySet());
+		List<Book> retval = new ArrayList<>();
+		retval.addAll(da.readBooksMap().values());
 		return retval;
 	}
 	
